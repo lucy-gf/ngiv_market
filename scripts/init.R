@@ -37,8 +37,10 @@ source(here::here('scripts','setup','packages.R'))
 #### colour schemes etc. ####
 source(here::here('scripts','setup','aesthetics.R'))
 
-#### load relevant data ####
+#### set key parameters ####
 
+# x <- 
+# y <- 
 
 
 
