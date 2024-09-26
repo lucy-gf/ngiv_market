@@ -1,8 +1,10 @@
 #### Economic analysis ####
 
+#### framework ####
 # in:
 # coverage assumptions (from MMGH)
 # epi data (from previous work, ITZ-specific)
+# vaccine type characteristics (from PPCs)
 
 # out: 
 # epidemic data (from simulations)
@@ -22,6 +24,7 @@
 # costs to producer
 ## 1 - research investment
 ## 2 - cost of vaccine dose production
+## 3 - profits of vaccine sales
 
 # out: 
 # national costs and benefits
@@ -29,21 +32,12 @@
 # therefore distribution
 
 #### load relevant packages ####
+source(here::here('scripts','setup','packages.R'))
 
-library(readr)
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(data.table))
-library(odin)
-library(parallel)
-library(countrycode)
-library(ggplot2)
-library(readxl)
-suppressPackageStartupMessages(library(tidyverse))
-library(viridis)
-library(patchwork)
-library(wpp2022)
-library(WDI)
+#### colour schemes etc. ####
+source(here::here('scripts','setup','aesthetics.R'))
 
+#### load relevant data ####
 
 
 
