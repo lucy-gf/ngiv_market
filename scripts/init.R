@@ -39,9 +39,10 @@ source(here::here('scripts','setup','aesthetics.R'))
 
 #### set key parameters ####
 
-# x <- 
-# y <- 
-
+# years <- 10
+# start_year <- 2025
+# ageing <- F
+# etc etc
 
 
 
