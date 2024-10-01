@@ -8,8 +8,7 @@
 mmgh_cov <- here::here('data','MMGH','coverage.csv')
 
 ## run epidemic simulations
-source('next_gen_flu')
-
+source(here::here('next_gen_flu','flu_parallel.R'))
 
 
 
