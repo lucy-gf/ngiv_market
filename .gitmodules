@@ -1,0 +1,3 @@
+[submodule "next_gen_flu"]
+	path = next_gen_flu
+	url = https://github.com/lucy-gf/next_gen_flu
