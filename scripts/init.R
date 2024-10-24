@@ -1,8 +1,9 @@
 #### Market surplus analysis ####
 
 #### framework ####
+
 # in:
-# coverage assumptions (from MMGH)
+# vaccine demand (from MMGH) 
 # epi data (from previous work, ITZ-specific)
 # vaccine type characteristics (from PPCs)
 
@@ -12,7 +13,8 @@
 # in:
 # health outcome data (from previous work)
 # economic data (from previous work)
-# vaccine procurement costs (from MMGH)
+# country procurement classifications (from MMGH)
+# vaccine prices (from MMGH)
 
 # out [SIM 1]:
 # national net monetary benefit
@@ -35,14 +37,20 @@
 source(here::here('scripts','setup','packages.R'))
 
 #### colour schemes etc. ####
+# same as https://github.com/lucy-gf/flu_model_LG
 source(here::here('scripts','setup','aesthetics.R'))
 
 #### set key parameters ####
 
-# years <- 10
-# start_year <- 2025
-# ageing <- F
+years_of_analysis <- 25
+start_year_of_analysis <- 2025
+ageing <- T
 # etc etc
+
+
+
+
+
 
 
 
