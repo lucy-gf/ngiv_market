@@ -4,7 +4,7 @@
 - `/data/` for input data
 - `/output/` for epi and econ model outputs (data and figures)
 
-## Within /scripts/
+## Within `/scripts/`
 
 `/setup/` contains setups for packages, ggplot aesthetics, etc.
 
