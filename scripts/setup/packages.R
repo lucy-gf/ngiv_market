@@ -13,8 +13,8 @@ library(viridis)
 library(patchwork)
 library(wpp2022)
 library(WDI)
-
-
+suppressPackageStartupMessages(library(fluEvidenceSynthesis))
+library(parallel)
 
 
 
