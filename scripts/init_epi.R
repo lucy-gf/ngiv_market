@@ -23,12 +23,13 @@ source(here::here('scripts','setup','aesthetics.R'))
 
 model_age_groups <- c(0,5,20,65) # MODEL AGE GROUPS - fixed 
 age_group_names <- paste0(model_age_groups,"-", c(model_age_groups[2:length(model_age_groups)],99))
-years_of_analysis <- 26
 start_year_of_analysis <- 2025
+years_of_analysis <- 26
+simulations <- 1 # 100
 ageing <- T
 
-#### run epidemics (WIP) ####
-itz_input <- 'GBR'
+#### run epidemics ####
+itz_input <- c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[2]
 source(here::here('scripts','epidemics','epid_simulations.R'))
 
 

@@ -28,7 +28,7 @@ itzs[, hemisphere := case_when(cluster_name=='Asia-Europe' ~ 'NH',
                                  T ~ NA)]
 
 ## taking model age groups 
-# TODO will need to discuss how to incorporate comomorbidities etc. at a later date
+# TODO - how to incorporate comomorbidities etc. at a later date
 cov_dt <- mmgh_cov[pop_name %in% c('children','over65','age_5_64')]
 cov_dt_add <- cov_dt[pop_name == 'age_5_64']
 cov_dt_add[, age_grp := 3]
@@ -54,9 +54,10 @@ source(here::here('next_gen_flu','flu_parallel.R'))
   
 hemisphere_input <- itzs[cluster_code==itz_input]$hemisphere[1]
 isos <- itzs[cluster_code==itz_input]$codes
+isos <- intersect(isos, unique(mmgh_cov$iso3c)) # TODO - quick fix for now about countries included
 
 sampled_epids <- data.table(read_csv(here::here('data','epi','sampled_epids',paste0('sampled_epidemics_30_100_',itz_input,'_wr0.csv')), show_col_types=F))
-epids <- sampled_epids[simulation_cal_year <= years_of_analysis]
+epids <- sampled_epids[simulation_cal_year <= years_of_analysis & simulation_index <= simulations]
 ageing_date <- '01-04'
 ageing_day <- as.numeric(substr(ageing_date, 1, 2))
 ageing_month <- as.numeric(substr(ageing_date, 4, 5))
