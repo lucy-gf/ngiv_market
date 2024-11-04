@@ -9,7 +9,7 @@ strain_colors2 <- c('INF_A' = '#7d66ac', 'INF_B' = '#e483a4')
 vt_colors <- c('1' = '#d91818', '2' = '#e2790e', '3' = '#eacb2c', '4' = '#62adc1', '5' = '#324da0')
 vt_colors1 <- c('no_vacc' = '#000000', 'current' = '#d91818', 'improved_minimal' = '#e2790e', 
                'improved_efficacy' = '#eacb2c', 'improved_breadth' = '#62adc1', 'universal' = '#324da0')
-age_colors <- c('0-5' = '#FDE725FF', '5-20' = '#5DC863FF', '20-65' = '#21908CFF', '65+' = '#3B528BFF', 'Total' = '#440154FF')
+age_colors <- c('0-4' = '#FDE725FF', '5-19' = '#5DC863FF', '20-64' = '#21908CFF', '65+' = '#3B528BFF', 'Total' = '#440154FF')
 age_colors1 <- c('1' = '#FDE725FF', '2' = '#5DC863FF', '3' = '#21908CFF', '4' = '#3B528BFF', '5' = '#440154FF')
 cluster_colors2 <- c("Asia-Europe"="#21908CFF", "Southern America" = '#65156EFF', "Oceania-Melanesia-Polynesia" = '#CC4678FF', 
                      "Europe" = '#ffeba4', "Eastern and Southern Asia" = '#51C56AFF', "Northern America" = '#F89441FF', 

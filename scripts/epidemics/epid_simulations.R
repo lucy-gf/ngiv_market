@@ -27,7 +27,7 @@ itzs[, hemisphere := case_when(cluster_name=='Asia-Europe' ~ 'NH',
                                  cluster_name=='Northern America' ~ 'NH',
                                  T ~ NA)]
 
-## taking model age groups 
+## taking model age groups s
 # TODO - how to incorporate comomorbidities etc. at a later date
 cov_dt <- mmgh_cov[pop_name %in% c('children','over65','age_5_64')]
 cov_dt_add <- cov_dt[pop_name == 'age_5_64']
@@ -40,11 +40,16 @@ cov_dt <- arrange(cov_dt, age_grp, vaccine, country, year) %>% select(country,is
 
 # ## DATA EXPLORATION - IGNORE
 # # example coverage in a few countries
-# ggplot() +
-#   geom_line(data=cov_dt[iso3c%in% c('GBR','UKR','ZMB','UZB') & vaccine==1], aes(year,cov,col=as.factor(age_grp)),lwd=0.8) +
-#   geom_line(data=cov_dt[iso3c%in% c('GBR','UKR','ZMB','UZB') & vaccine==2], aes(year,cov,col=as.factor(age_grp)),lty=2,lwd=0.8) +
-#   # facet_grid(iso3c~pop_name,scales='free') + theme_bw() + ylim(0,1)
-#   facet_grid(iso3c~.,scales='free') + theme_bw() + ylim(0,1)
+cov_dt[, age_name := case_when(age_grp == 1 ~ '0-4',age_grp == 2 ~ '5-19',age_grp == 3 ~ '20-64',age_grp == 4 ~ '65+')]
+cov_dt$age_name <- factor(cov_dt$age_name, levels=c('0-4','5-19','20-64','65+'))
+ggplot() +
+  geom_line(data=cov_dt[iso3c%in% c('GBR','BRB','FRA','GHA') & vaccine==1], aes(year,cov,col=as.factor(age_name)),lwd=0.8) +
+  geom_line(data=cov_dt[iso3c%in% c('GBR','BRB','FRA','GHA') & vaccine==2], aes(year,cov,col=as.factor(age_name)),lty=2,lwd=0.8) +
+  # facet_grid(iso3c~pop_name,scales='free') + theme_bw() + ylim(0,1)
+  facet_grid(country~.,scales='free') + theme_bw() + ylim(0,1) + labs(col='Age group') + ylab('Age-specific coverage') +
+  scale_color_viridis(discrete=T, direction=-1) + xlab('Year')
+ggsave(here::here('output','figures','epi','coverage_examples.png'),
+       width=20,height=14,units="cm")
 # test <- dcast(cov_dt,  country + iso3c + year + age_grp ~ vaccine, value.var='cov')
 # test[, diff := `2`-`1`]
 # View(test[diff>0]) # all in over 65s
