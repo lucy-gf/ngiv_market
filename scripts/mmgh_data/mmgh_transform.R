@@ -108,31 +108,55 @@ demand_input <- demand_input %>% arrange(vacc_scenario,country,year,model_age_gr
 
 write_csv(demand_input, here::here('data','MMGH','demand_input.csv'))
 
-####################################
-## testing these make sense:
+# ####################################
+# # testing these make sense:
 # 
 # dem_test <- demand_input %>% mutate(prop = doses/pop)
 # 
-# mmgh_demand[year == 2050 & iso3c=='KOR' & pop_name=='children']
-# mmgh_pop[year == 2050 & iso3c=='KOR' & pop_name %in% c('6-59mo','5-17yo')]
+# mmgh_demand[year == 2031 & iso3c=='KOR' & pop_name=='children']
+# mmgh_pop[year == 2031 & iso3c=='KOR' & pop_name %in% c('6-59mo','5-17yo')]
 # 
-# # more doses than population! 
+# # more doses than population!
 # 
-# View(dem_test %>% filter(prop>1, model_age_group == 1))
+# View(dem_test %>% filter(prop>1))
 # 
 # ## plots:
 # # 
-# demand_input %>% filter(iso3c %in% c('ARG','GBR','AUS','CAN')) %>%
+# demand_input %>% filter(iso3c %in% c('AUS')) %>%
 #   ggplot(aes(x=year,y=doses/1000000,col=vacc_scenario)) +
 #   geom_line() + facet_grid(iso3c~model_age_group, scales='free') +
 #   theme_bw() + ylab('Doses, millions') +
 #   scale_color_manual(values = vtn_colors)
+# # 
+# mmgh_demand %>% filter(iso3c %in% c('KOR','CUB','BTN')) %>%
+#   filter(pop_name == 'children') %>%
+#   ggplot() +
+#   geom_line(aes(x=year,y=doses,col=vacc_scenario),lwd=1) +
+#   facet_grid(country~., scales='free') +
+#   geom_line(data = mmgh_pop %>%
+#               filter(iso3c %in% c('KOR','CUB','BTN') &
+#                        pop_name %in% c('6-59mo','5-17yo') &
+#                        year %in% 2023:2050) %>%
+#               pivot_wider(names_from=pop_name, values_from = pop),
+#             aes(x=year,y=`6-59mo`+`5-17yo`), lty = 2, lwd=1) +
+#   theme_bw() + ylab('') + theme(text=element_text(size = 14)) +
+#   # scale_color_manual(values = vtn_colors)
+#   scale_color_viridis(discrete=T) + xlab('Year') + scale_x_continuous(breaks=2023:2050)
+# ggsave(here::here('mmgh_plot.png'), width=16, height=12)
 # 
-# 
-# mmgh_demand %>% filter(iso3c == 'GBR', pop_name == '18-64yo')
-# dem_test %>% filter(iso3c == 'GBR', model_age_group == 3)
-
-
-
+# mmgh_demand %>% filter(iso3c %in% c('GBR','FRA','USA')) %>%
+#   filter(pop_name == 'children') %>%
+#   ggplot() +
+#   geom_line(aes(x=year,y=doses,col=vacc_scenario),lwd=1) +
+#   facet_grid(country~., scales='free') +
+#   geom_line(data = mmgh_pop %>%
+#               filter(iso3c %in% c('GBR','FRA','USA') &
+#                        pop_name %in% c('6-59mo','5-17yo') &
+#                        year %in% 2023:2050) %>%
+#               pivot_wider(names_from=pop_name, values_from = pop),
+#             aes(x=year,y=`6-59mo`+`5-17yo`), lty = 2, lwd=1) +
+#   theme_bw() + ylab('') + theme(text=element_text(size = 14)) +
+#   # scale_color_manual(values = vtn_colors)
+#   scale_color_viridis(discrete=T) + xlab('Year') + scale_x_continuous(breaks=2023:2050)
 
 

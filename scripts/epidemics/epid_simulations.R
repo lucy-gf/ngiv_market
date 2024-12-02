@@ -6,7 +6,7 @@
 
 if(vaccine_variable == 'coverage'){
   print('Not set up for coverage yet')
-}
+} 
 
 ## set up next_gen_flu code
 source(here::here('next_gen_flu','flu_parallel.R'))

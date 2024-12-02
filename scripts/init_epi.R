@@ -31,7 +31,7 @@ years_of_analysis <- 26
 
 simulations <- 1 # 100
 ageing <- T
-key_dates <- c('01-04', '01-10')
+key_dates <- c('01-04', '01-10') # vaccination and ageing dates (hemisphere-dependent)
 vacc_calendar_weeks <- 12
 
 vaccine_variable <- c('doses','coverage')[1] # using MMGH doses or % coverage?

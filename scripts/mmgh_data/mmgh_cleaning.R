@@ -1,12 +1,7 @@
 #### MMGH data cleaning ####
 
 library(here)
-library(data.table)
-library(readxl)
-library(openxlsx)
-library(stringr)
-library(ggplot2)
-library(purrr)
+source(here::here('scripts','setup','packages.R'))
 
 ## read in raw data ##
 
@@ -73,13 +68,13 @@ clean_demand <- function(dt_raw){
 ## map 
 
 demand_pops_curr <- list(
-  list(sheet = "5a. Demand children base frozen", pop_name = 'children'),
-  list(sheet = "5b. Demand 65+ base frozen", pop_name = '65+'),
-  list(sheet = "5c. Demand HWF base frozen", pop_name = 'HWF'),
-  list(sheet = "5e. Demand PW base frozen", pop_name = 'PW'),
-  list(sheet = "5f. Demand comorb base frozen", pop_name = 'comorb'),
-  list(sheet = "5g. Demand 18-64yo base frozen", pop_name = '18-64yo'),
-  list(sheet = "5h. Total demand base frozen", pop_name = 'total')
+  list(sheet = "4a. Demand children base", pop_name = 'children'),
+  list(sheet = "4b. Demand 65+ base", pop_name = '65+'),
+  list(sheet = "4c. Demand HWF base", pop_name = 'HWF'),
+  list(sheet = "4e. Demand PW base", pop_name = 'PW'),
+  list(sheet = "4f. Demand comorb base", pop_name = 'comorb'),
+  list(sheet = "4g. Demand 18-64yo base", pop_name = '18-64yo'),
+  list(sheet = "4h. Total demand base", pop_name = 'total')
 )
 
 results_curr <- map(demand_pops_curr, ~{
@@ -293,6 +288,8 @@ setnames(prices, 'value','price')
 prices[, range_vals := ((str_split(gsub('\\$| -| –','', price), ' ')))]
 for(i in 1:nrow(prices)){
   prices[i, midpoint := mean(as.numeric(unlist(prices$range_vals[i])))]  
+  prices[i, lower := min(as.numeric(unlist(prices$range_vals[i])))]  
+  prices[i, upper := max(as.numeric(unlist(prices$range_vals[i])))]  
 }
 prices <- prices[, !'range_vals']
 
@@ -300,7 +297,8 @@ write.csv(prices, here::here('data','MMGH','prices.csv'))
 
 # prices$vacc_type <- factor(prices$vacc_type, levels=unique(prices$vacc_type))
 # ggplot(prices) +
-#   geom_line(aes(x=vacc_type, y=midpoint, group = country_type, col=country_type))
+#   geom_ribbon(aes(x=vacc_type, ymin=lower, ymax=upper, group = country_type, fill=country_type), alpha=0.3) +
+#   geom_line(aes(x=vacc_type, y=midpoint, group = country_type, col=country_type), lwd=0.8)
 
 
 

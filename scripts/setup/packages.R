@@ -15,6 +15,9 @@ library(wpp2022)
 library(WDI)
 suppressPackageStartupMessages(library(fluEvidenceSynthesis))
 library(parallel)
+library(openxlsx)
+library(stringr)
+library(purrr)
 
 
 
