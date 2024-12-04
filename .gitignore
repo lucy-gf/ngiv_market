@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 
-data/MMGH/
+data/MMGH/raw/
+data/MMGH/raw/dummy_data/
 output/data/
 output/figures/
