@@ -1,2 +1,0 @@
-"x"
-"1" "VUT, simulation 1, time taken = 40.8, number of epids = 54, total time on country = 43.85"

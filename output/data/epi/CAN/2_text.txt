@@ -1,2 +1,0 @@
-"x"
-"1" "USA, simulation 1, time taken = 37.44, number of epids = 51, total time on country = 43.42"
