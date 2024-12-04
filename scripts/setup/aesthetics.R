@@ -8,7 +8,7 @@ strain_colors1 <- c('A' = '#7d66ac', 'B' = '#e483a4')
 strain_colors2 <- c('INF_A' = '#7d66ac', 'INF_B' = '#e483a4')
 
 
-vtn_colors <- c('0' = '#d91818', 'A.1' = '#e2790e', 'A.2' = '#eacb2c', 'B.1' = '#62adc1', 'B.2' = '#324da0', 'C' = '#440154FF')
+vtn_colors <- c('0' = '#d91818', 'A.1' = '#e2790e', 'A.2' = '#eacb2c', 'B.1' = '#6baed6', 'B.2' = '#08519c', 'C' = '#810f7c')
 
 age_colors <- c('0-4' = '#FDE725FF', '5-17' = '#5DC863FF', '18-64' = '#21908CFF', '65+' = '#3B528BFF', 'Total' = '#440154FF')
 age_colors1 <- c('1' = '#FDE725FF', '2' = '#5DC863FF', '3' = '#21908CFF', '4' = '#3B528BFF', '5' = '#440154FF')

@@ -81,6 +81,28 @@ un_pop[1,3]/1000000000
 
 
 
+#### 
+load("~/Desktop/research asst/Global Code/data/vacc_output_BASE50/econ_inp_CAN.Rdata")
+test <- econ_inp[country_code=='CAN']
+colSums(test[scenario=='no_vacc' & simulation_index==1 & year < 2030][,4:7] + test[scenario=='no_vacc' & simulation_index==1 & year < 2030][,12:15])
+
+tdata <- infs_out[iso3c=='CAN' & year(time) < 2030 & vacc_type=='0']
+tdata[, year := year(time)]
+tdata[, time:=NULL]
+tdata <- tdata[, lapply(.SD, sum), by=c('year','vacc_type','simulation_index','iso3c')]
+colSums(tdata[,5:8])
+
+
+sum(test[simulation_index==1 & year %in% 2025:2050 & scenario == 'no_vacc', 4:19])/26 
+sum(infs_out[iso3c=='CAN' & simulation_index==1 & year(time) %in% 2025:2050 & vacc_type=='0', 2:5])/26 
+
+
+
+
+
+
+
+
 
 
 

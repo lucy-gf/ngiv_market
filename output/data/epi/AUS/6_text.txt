@@ -1,2 +1,2 @@
 "x"
-"1" "WSM, 1, time taken = 45.59, number of epids = 54, total time on country = 51.53"
+"1" "VUT, simulation 1, time taken = 40.7, number of epids = 54, total time on country = 43.76"
