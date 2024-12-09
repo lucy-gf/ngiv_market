@@ -27,6 +27,8 @@ for(iso3c_input in isos){
   iso_time <- Sys.time()
   print(iso3c_input)
   
+  printed <<- F
+  
   ## VACCINE DATA
   doses <- demand_input[iso3c==iso3c_input]
   vacc_calendar_start <- ifelse(hemisphere_input=='NH', key_dates[2], key_dates[1])
@@ -84,5 +86,5 @@ for(iso3c_input in isos){
 
 #### SAVE OUTPUTS ####
 
-saveRDS(infs_out, file = here::here('output','data','epi',paste0(itz_input),paste0('vacc_',itz_input,'.rds')))
+saveRDS(infs_out, file = here::here('output','data','epi','rds_output',paste0('vacc_',itz_input,'.rds')))
 

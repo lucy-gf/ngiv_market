@@ -29,7 +29,7 @@ age_group_names <- paste0(model_age_groups,"-", c(model_age_groups[2:length(mode
 start_year_of_analysis <- 2025
 years_of_analysis <- 26
 
-simulations <- 1 # 100
+simulations <- 100
 ageing <- T
 key_dates <- c('01-04', '01-10') # vaccination and ageing dates (hemisphere-dependent)
 vacc_calendar_weeks <- 12
@@ -48,10 +48,8 @@ source(here::here('next_gen_flu','vacc_types.R'))
 source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 
 #### run epidemics ####
-itz_input <- c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[3]
+itz_input <- c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[7]
 source(here::here('scripts','epidemics','epid_simulations.R'))
-
-
 
 
 

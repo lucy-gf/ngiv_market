@@ -96,8 +96,32 @@ eti95U <- function(x){
   }else{stop('length(x) != 100')}
 }
 
+# turn data.table into median etc.:
 
-
+dt_to_meas <- function(dt, # data.table input
+                         cols, # vector of column names to group by
+                         using50 = F
+                       ){
+  out <- data.table()
+  if(using50 == T){
+    for(meas in c('median','eti50L', 'eti50U', 'eti95L', 'eti95U')){
+      dt_m <- dt[, lapply(.SD, get(meas)), by = cols]
+      dt_m[, measure := meas]
+      out <- rbind(out, dt_m)
+    }
+  }else{
+    for(meas in c('median', 'eti95L', 'eti95U')){
+      dt_m <- dt[, lapply(.SD, get(meas)), by = cols]
+      dt_m[, measure := meas]
+      out <- rbind(out, dt_m)
+    }
+  }
+  if('simulation_index' %in% colnames(out)){
+    out[,simulation_index:=NULL]
+  }
+  
+  out
+}
 
 
 
