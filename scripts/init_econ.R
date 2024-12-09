@@ -33,9 +33,37 @@ source(here::here('scripts','setup','packages.R'))
 # same as https://github.com/lucy-gf/flu_model_LG
 source(here::here('scripts','setup','aesthetics.R'))
 
-#### set key parameters ####
+################################################
+############## set key parameters ##############
+################################################
 
+model_age_groups <- c(0,5,18,65)
+age_group_names <- paste0(model_age_groups,"-", c(model_age_groups[2:length(model_age_groups)],99))
 
+start_year_of_analysis <- 2025
+years_of_analysis <- 26
+
+simulations <- 100
+ageing <- T
+key_dates <- c('01-04', '01-10') # vaccination and ageing dates (hemisphere-dependent)
+vacc_calendar_weeks <- 12
+
+vaccine_variable <- c('doses','coverage')[1] 
+
+#### load vaccine types ####
+source(here::here('next_gen_flu','vacc_types.R'))
+
+#### load MMGH data, merge subpopulations into model age groups ####
+source(here::here('scripts','mmgh_data','mmgh_transform.R'))
+
+#### produce shrunk datasets ####
+source(here::here('scripts','econ','shrink_epi_data.R'))
+
+#### produce econ data ####
+source(here::here('scripts','econ','make_econ_data'))
+
+### run first econ analysis ####
+# source(here::here('scripts','econ','national_health_econ_1.R'))
 
 
 
