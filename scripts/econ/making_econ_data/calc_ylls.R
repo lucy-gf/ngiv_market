@@ -1,5 +1,6 @@
 
 ## CALCULATING YLLS PER DEATH
+print('YLLs')
 
 library(data.table) 
 
@@ -137,6 +138,19 @@ yll <- function(
   return(out) 
 }
 
+yll_df <- national_ifrs[simulation_index==1, c('iso3c','age_grp','cluster_name')]
+
+pb <- txtProgressBar(min = 0, max = length(unique(yll_df$iso3c)), style = 3, width = 50, char = "=")
+
+for(i in 1:length(unique(yll_df$iso3c))){
+  iso3c_i <- unique(yll_df$iso3c)[i]
+  yll_df[iso3c == iso3c_i, 'yll'] <- yll(LT = UNLT[ISO3_code == iso3c_i & MidPeriod == 2022.5],
+                                         r = DALY_discount_rate_val,
+                                         smr = 1,
+                                         weight_method = "lxqx", # weight method to average LE by age group: "lx" "lxqx" "equal" "pop_ifr"
+                                         model_ages = model_age_groups)$d_LEx
+  setTxtProgressBar(pb, i)
+}
 
 
 

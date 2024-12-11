@@ -7,6 +7,8 @@
 ########## SET UP ############
 ##############################
 
+select <- dplyr::select
+
 price_used <- c('midpoint','lower','upper')[1]
 
 # sensitivity analyses
@@ -33,6 +35,8 @@ DALY_discount_rate_val <- c(0.03, 0)[1 + discount_SA]
 flu_duration <- 4/365
 wastage <- 0.1
 
+# TODO - are we adding in wastage?
+
 ## loading epi data
 
 infs_out <- readRDS(here::here('output','data','epi','rds_output','vacc_global.rds'))
@@ -52,9 +56,8 @@ country_specs[, country_type := case_when(
   income_g %in% c('LMIC','LIC') & procure_mech == 'Self-procuring' ~ 'lmic_self_proc',
 )]
 
-# TODO - check why doses are not integers
-
 doses <- demand_input[, c('iso3c','WHO_region','income_g','vacc_scenario','year','doses','vacc_used')]
+doses[, doses := ceiling(doses)]
 doses <- doses[iso3c %in% infs_out$iso3c]
 doses <- doses[, lapply(.SD, sum), by = c('iso3c','WHO_region','income_g','vacc_scenario','vacc_used','year')]
 doses[, vacc_type := substr(vacc_used,1,1)]
@@ -64,14 +67,26 @@ doses <- doses[country_specs[, c('iso3c','country_type')], on='iso3c']
 doses <- doses[prices[, c('vacc_type','country_type',..price_used)], on=c('vacc_type','country_type')]
 setnames(doses, paste0(price_used), 'price')
 
-doses[, doses_cost := doses*price]
+setorder(doses, iso3c, vacc_scenario, year)
 
-# TODO - add delivery costs!
+doses[, doses_cost := doses*price]
+length_dt <- nrow(doses)
+
+doses <- rbindlist(replicate(n = 100, expr = doses, simplify = FALSE))
+doses$simulation_index <- rep(1:100, each = length_dt)
+
+# costs of doses
+delivery_cost_samples <- data.table(read_csv(here::here('data','econ','delivery_cost_samples.csv'), show_col_types=F))
+delivery_cost_samples <- delivery_cost_samples[iso3c %in% unique(doses$iso3c)]
+doses <- doses[delivery_cost_samples, on=c('iso3c','simulation_index')]
+
+doses[, total_delivery_cost := doses*delivery_cost]
+doses[, total_cost := total_delivery_cost + doses_cost]
 
 ## discounting
 doses[, discount_year := year - start_year_of_analysis]
 doses[, discount_rate := (1 + cost_discount_rate_val)^(-discount_year)]
-doses[, discounted_doses_cost := doses_cost*discount_rate]
+doses[, discounted_doses_cost := total_cost*discount_rate]
 doses[, discount_year := NULL]
 
 ##############################
@@ -103,7 +118,7 @@ if(disease_modification == T){
 setnames(econ_cases_agg, 'value','infections')
 
 #### IFRS ####
-# TODO - change model age groups for IFRs
+# TODO - move to making_econ, rerun with new model age groups
 
 print('IFRs')
 ## load ifrs
@@ -119,7 +134,7 @@ if(disease_modification==T){
 }
 
 #### IHRS ####
-# TODO - change model age groups for IHRs
+# TODO - change model age groups for IHRs, move to make_econ
 
 print('IHRs')
 ## load ihrs
@@ -146,57 +161,9 @@ if(outp_include == T){
 }
 
 #### SYMPTOMATIC + FEVER ####
-# TODO - move calculations to make_econ_data.R
 
 ## from carrat (DOI: 10.1093/aje/kwm375)
 print('symptomatic, fever')
-# symp_probs <- data.table(
-#   outcome = c('symptoms','fever'),
-#   med = c(66.9, 34.9)/100,
-#   l95 = c(58.3, 26.7)/100,
-#   u95 = c(74.5, 44.2)/100
-#   )
-# ## determining distribution
-# f.gamma <- function(shape, rate, x) {
-#   p <- pgamma(x, shape, rate)
-#   # return both
-#   return(c(p))
-# }
-# delta <- function(fit, actual) sum((fit-actual)^2)
-# objective <- function(theta, x, prob, ...) {
-#   ab <- (theta)
-#   fit <- f.gamma(ab[1], ab[2], x=as.numeric(x),...)
-#   # fit <- f.beta(ab[1], ab[2], x=as.numeric(x),...)
-#   return (delta(fit, prob))
-# }
-# fcn_fitting <- function(rates,
-#                         probs){
-#
-#   x <- c(unlist(unname(rates)))
-#   sol <- suppressWarnings(optim(f=objective,p=c(1,1),
-#                                 # method="BFGS",
-#                                 x=x,
-#                                 prob=c(probs),
-#                                 control = list(reltol = 1e-15)
-#   ))
-#   parms <- (sol$par)
-#   return(parms)
-# }
-#
-# for(i in 1:nrow(symp_probs)){
-#   parms <- fcn_fitting(symp_probs[i,2:4], c(0.5, 0.025, 0.975))
-#   symp_probs[i,"shape"] <- parms[1]
-#   symp_probs[i,"rate"] <- parms[2]
-#   symp_probs[i,"med_fit"] <- qgamma(p=c(0.5), shape=parms[1], rate=parms[2])
-#   symp_probs[i,"l95_fit"] <- qgamma(p=c(0.025), shape=parms[1], rate=parms[2])
-#   symp_probs[i,"u95_fit"] <- qgamma(p=c(0.975), shape=parms[1], rate=parms[2])
-# }
-#
-# symp_samples <- data.table(
-#   simulation_index = 1:100,
-#   symp_prob = rgamma(100, shape = unlist(symp_probs[outcome=='symptoms','shape']), rate = unlist(symp_probs[outcome=='symptoms','rate'])),
-#   fever_prob = rgamma(100, shape = unlist(symp_probs[outcome=='fever','shape']), rate = unlist(symp_probs[outcome=='fever','rate'])))
-# write_csv(symp_samples, file='econ/outcome_calculations/data/symp_samples.csv')
 
 symp_samples <- data.table(read_csv(here::here('data','econ','symp_samples.csv'),
                                     show_col_types=F))
@@ -204,26 +171,11 @@ symp_samples <- data.table(read_csv(here::here('data','econ','symp_samples.csv')
 econ_cases_agg <- econ_cases_agg[symp_samples, on=c('simulation_index')]
 econ_cases_agg[, symptomatics := symp_prob*infections][, fevers := fever_prob*infections][, non_fevers := symptomatics - fevers]
 
-
 #### YLLS ####
 
 ## discounting at same rate as DALYs, using 'lxqx' method
-
 print('YLLs')
-# TODO - move calc_ylls.R to make_econ_data.R
-yll_df <- national_ifrs[simulation_index==1, c('iso3c','age_grp','cluster_name')]
-source(here::here('data','econ','calc_ylls.R'))
-pb <- txtProgressBar(min = 0, max = 186, style = 3, width = 50, char = "=")
-
-for(i in 1:length(unique(yll_df$iso3c))){
-  iso3c_i <- unique(yll_df$iso3c)[i]
-  yll_df[iso3c == iso3c_i, 'yll'] <- yll(LT = UNLT[ISO3_code == iso3c_i & MidPeriod == 2022.5],
-                                                r = DALY_discount_rate_val,
-                                                smr = 1,
-                                                weight_method = "lxqx", # weight method to average LE by age group: "lx" "lxqx" "equal" "pop_ifr"
-                                                model_ages = model_age_groups)$d_LEx
-  setTxtProgressBar(pb, i)
-}
+yll_df <- yll_df[iso3c %in% unique(econ_cases_agg$iso3c)]
 
 econ_cases_agg <- econ_cases_agg[yll_df, on=c('iso3c','age_grp'), yll := yll]
 econ_cases_agg[,YLLs := yll*deaths]
@@ -233,29 +185,6 @@ econ_cases_agg[, c('ifr','ihr','symp_prob','fever_prob','yll'):=NULL]
 
 #### YLDS ####
 print('YLDs')
-
-## weights from GBD
-# DALY_weights <- data.table(
-#   outcome = c('non_fever','fever','hospitalisation'),
-#   med = c(0.006, 0.051, 0.133),
-#   l95 = c(0.002, 0.032, 0.088),
-#   u95 = c(0.012, 0.074, 0.190)
-# )
-# for(i in 1:nrow(DALY_weights)){
-#   parms <- fcn_fitting(DALY_weights[i,2:4], c(0.5, 0.025, 0.975))
-#   DALY_weights[i,"shape"] <- parms[1]
-#   DALY_weights[i,"rate"] <- parms[2]
-#   DALY_weights[i,"med_fit"] <- qgamma(p=c(0.5), shape=parms[1], rate=parms[2])
-#   DALY_weights[i,"l95_fit"] <- qgamma(p=c(0.025), shape=parms[1], rate=parms[2])
-#   DALY_weights[i,"u95_fit"] <- qgamma(p=c(0.975), shape=parms[1], rate=parms[2])
-# }
-# DALY_weight_samples <-  data.table(
-#   simulation_index = 1:100,
-#   non_fever_DALY = rgamma(100, shape = unlist(DALY_weights[outcome=='non_fever','shape']), rate = unlist(DALY_weights[outcome=='non_fever','rate'])),
-#   fever_DALY = rgamma(100, shape = unlist(DALY_weights[outcome=='fever','shape']), rate = unlist(DALY_weights[outcome=='fever','rate'])),
-#   hosp_DALY = rgamma(100, shape = unlist(DALY_weights[outcome=='hospitalisation','shape']), rate = unlist(DALY_weights[outcome=='hospitalisation','rate']))
-# )
-# write_csv(DALY_weight_samples, file='econ/outcome_calculations/data/DALY_weight_samples.csv')
 
 DALY_weight_samples <- data.table(read_csv(here::here('data','econ','DALY_weight_samples.csv'),
                                            show_col_types=F))
@@ -289,6 +218,19 @@ if(outp_include == T){
 }
 econ_cases_agg[, c('hosp_cost','outp_cost'):=NULL]
 
+#### WTP THRESHOLDS ####
+## adding WTP
+wtp_thresh <- data.table(read_csv(here::here('data','econ','WTP_thresholds.csv'), show_col_type=F))
+if(WTP_choice == 'lancet'){
+  econ_cases_agg <- econ_cases_agg[wtp_thresh, on=c('iso3c'), cet := cet]
+}
+if(WTP_choice == 'gdp'){
+  econ_cases_agg[, cet := WTP_GDP_ratio*gdpcap]
+}
+
+econ_cases_agg[, cost_of_DALYs := total_DALYs*cet]
+econ_cases_agg[, cet := NULL]
+
 #### DISCOUNTING ####
 print('discounting')
 
@@ -296,71 +238,102 @@ econ_cases_agg[, discount_year := year - start_year_of_analysis]
 econ_cases_agg[, cost_discount_rate := (1 + cost_discount_rate_val)^(-discount_year)]
 econ_cases_agg[, DALY_discount_rate := (1 + DALY_discount_rate_val)^(-discount_year)]
 if(outp_include == T){
-  econ_cases_agg[, discounted_costs := (total_hosp_cost + total_outp_cost)*cost_discount_rate]
+  econ_cases_agg[, discounted_epi_costs := (total_hosp_cost + total_outp_cost)*cost_discount_rate]
 }else{
-  econ_cases_agg[, discounted_costs := (total_hosp_cost)*cost_discount_rate]
+  econ_cases_agg[, discounted_epi_costs := (total_hosp_cost)*cost_discount_rate]
 }
-econ_cases_agg[, discounted_DALYs := total_DALYs*DALY_discount_rate]
+econ_cases_agg[, discounted_DALYs_cost := cost_of_DALYs*DALY_discount_rate]
 
 econ_cases_agg[, c('discount_year','cost_discount_rate','DALY_discount_rate'):=NULL]
 
-## adding WTP
-wtp_thresh <- data.table(read_csv(here::here('data','econ','WTP_thresholds.csv'), show_col_type=F))
-if(WTP_choice == 'lancet'){
-  econ_cases_agg <- econ_cases_agg[wtp_thresh, on=c('iso3c'), cet := cet]
-  econ_cases_agg[, disc_cost_of_DALYs := discounted_DALYs*cet]
-  econ_cases_agg[, cet := NULL]
-}
-if(WTP_choice == 'gdp'){
-  econ_cases_agg[, disc_cost_of_DALYs := WTP_GDP_ratio*discounted_DALYs*gdpcap]
-}
-
 ## NET MONETARY BENEFIT ##
 
-econ_add <- econ_cases_agg[, c('vacc_type','simulation_index','iso3c','discounted_costs','disc_cost_of_DALYs')]
-econ_add <- econ_add[, lapply(.SD, sum), by=c('vacc_type','simulation_index','iso3c')]
+econ_add <- econ_cases_agg[, c('vacc_type','simulation_index','iso3c','income_g','total_hosp_cost',
+                               'discounted_epi_costs','total_DALYs','discounted_DALYs_cost')]
+econ_add <- econ_add[, lapply(.SD, sum), by=c('vacc_type','simulation_index','iso3c','income_g')]
 
-doses_adding <- doses[, c('iso3c','vacc_scenario','discounted_doses_cost')]
+doses_adding <- doses[, c('iso3c','simulation_index','vacc_scenario','doses','total_cost','discounted_doses_cost')]
 setnames(doses_adding, 'vacc_scenario','vacc_type')
-doses_adding <- doses_adding[, lapply(.SD, sum), by = c('iso3c','vacc_type')]
+doses_adding <- doses_adding[, lapply(.SD, sum), by = c('iso3c','simulation_index','vacc_type')]
 
-econ_nmb <- econ_add[doses_adding, on = c('iso3c','vacc_type')]
-econ_nmb[, epi_cost := discounted_costs + disc_cost_of_DALYs]
-econ_nmb <- econ_nmb[, c('vacc_type','iso3c','simulation_index','epi_cost','discounted_doses_cost')]
+econ_nmb <- econ_add[doses_adding, on = c('iso3c','simulation_index','vacc_type')]
 
-base_econ <- econ_nmb[vacc_type=='0']
-setnames(base_econ, 'epi_cost','epi_cost_base')
-setnames(base_econ, 'discounted_doses_cost','doses_cost_base')
+econ_inmb <- econ_nmb[, c('vacc_type','iso3c','income_g','simulation_index','discounted_epi_costs','discounted_DALYs_cost','discounted_doses_cost')]
+
+base_econ <- econ_inmb[vacc_type=='0']
+setnames(base_econ, 'discounted_epi_costs','discounted_epi_costs_base')
+setnames(base_econ, 'discounted_DALYs_cost','discounted_DALYs_cost_base')
+setnames(base_econ, 'discounted_doses_cost','discounted_doses_cost_base')
 base_econ[, vacc_type := NULL]
-econ_nmb <- econ_nmb[!vacc_type=='0']
+econ_inmb <- econ_inmb[!vacc_type=='0']
 
-econ_nmb <- econ_nmb[base_econ, on=c('iso3c','simulation_index')]
+econ_inmb <- econ_inmb[base_econ, on=c('iso3c','income_g','simulation_index')]
 
-econ_nmb[, incr_epi := epi_cost - epi_cost_base]
-econ_nmb[, incr_vacc := discounted_doses_cost - doses_cost_base]
-econ_nmb[, nmb := - incr_epi - incr_vacc]
+econ_inmb[, incr_epi_cost := discounted_epi_costs_base - discounted_epi_costs] # saved costs of treatment 
+econ_inmb[, incr_DALY_cost := discounted_DALYs_cost_base - discounted_DALYs_cost] # cost of DALYs averted
+econ_inmb[, incr_doses_cost := discounted_doses_cost_base - discounted_doses_cost] # saved cost of vaccination (likely negative)
+econ_inmb[, inmb := incr_epi_cost + incr_DALY_cost + incr_doses_cost]
 
-ggplot(econ_nmb[iso3c%in% c('GBR','USA','FRA','GHA','NGA','SVN')]) + 
-  geom_boxplot(aes(x=vacc_type, y=nmb/1e9, fill=vacc_type)) + 
+econ_inmb[, names := countrycode(iso3c, destination='country.name',origin='iso3c')]
+ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_boxplot(aes(x=vacc_type, y=inmb/1e9, fill=vacc_type)) + 
+  facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
+  scale_fill_manual(values = vtn_colors) + xlab('') +
+  labs(fill='Vaccine type') +
+  geom_hline(yintercept=0, lty=2) +
+  ylab('Incremental net monetary benefit ($2022, billions)')
+
+ggplot(econ_nmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_point(aes(x=total_DALYs/1e6, y=(total_hosp_cost + total_cost)/1e9, col=vacc_type)) +
   facet_wrap(iso3c~., scales='free') + theme_bw() +
-  scale_fill_manual(values = vtn_colors) +
-  geom_hline(yintercept=0, lty=2)
-
-ggplot(econ_nmb[iso3c%in% c('GBR','USA','FRA','GHA','NGA','SVN')]) + 
-  geom_point(aes(x=incr_vacc, y=-incr_epi, col=vacc_type)) + 
-  facet_wrap(iso3c~., scales='free') + theme_bw() +
-  xlab('Incremental vaccine cost') + ylab('Incremental epi cost') +
   scale_color_manual(values = vtn_colors) +
-  geom_line(aes(x=incr_vacc, y=incr_vacc), lty=2)
+  xlab('DALYs (millions)') + ylab('Total cost ($2022, billions)')
 
-# where does all the variation come from??
+econ_nmb2 <- copy(econ_nmb)
+econ_nmb2[, total_cost := total_cost + total_hosp_cost]
+econ_nmb2 <- econ_nmb2[, c('vacc_type','iso3c','income_g','total_cost','total_DALYs')]
+econ_nmb_meds <- dt_to_meas(econ_nmb2, c('vacc_type','iso3c','income_g'))
+econ_nmb_meds_w <- dcast(econ_nmb_meds,
+                         vacc_type+iso3c+income_g~measure, 
+                         value.var=c('total_cost','total_DALYs'))
+econ_nmb_meds_w[, names := countrycode(iso3c, destination='country.name',origin='iso3c')]
+ggplot(econ_nmb_meds_w[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_errorbar(aes(xmin=total_DALYs_eti95L/1e6, xmax=total_DALYs_eti95U/1e6,
+                    y=(total_cost_median)/1e9, col=vacc_type),alpha=0.8) +
+  geom_errorbar(aes(x=total_DALYs_median/1e6, 
+                    ymin=(total_cost_eti95L)/1e9, 
+                    ymax=(total_cost_eti95U)/1e9,col=vacc_type),alpha=0.8) +
+  geom_point(aes(x=total_DALYs_median/1e6, y=(total_cost_median)/1e9, 
+                 col=vacc_type)) +
+  facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
+  scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
+  xlab('DALYs lost (millions)') + ylab('Total cost ($2022, billions)') + xlim(c(0,NA))
 
-ggplot(econ_cases_agg[iso3c%in% c('GBR','USA','FRA','GHA') & age_grp==4 & year==2046]) +
-  geom_boxplot(aes(x=vacc_type, y=deaths, fill=vacc_type)) +
-  facet_wrap(iso3c~., scales='free') + theme_bw() +
-  scale_fill_manual(values = vtn_colors)
+econ_inmb_meds <- dt_to_meas(econ_inmb, c('vacc_type','iso3c','income_g','names'))
+econ_inmb_meds_w <- dcast(econ_inmb_meds[, c('vacc_type','iso3c','income_g','inmb','measure')],
+                          vacc_type+iso3c+income_g~measure, value.var='inmb')
 
-ggplot(econ_cases_agg[iso3c%in% c('GBR','USA','FRA','GHA') & age_grp==4 & year==2046]) +
-  geom_boxplot(aes(x=vacc_type, y=infections, fill=vacc_type)) +
-  facet_wrap(iso3c~., scales='free') + theme_bw() +
-  scale_fill_manual(values = vtn_colors)
+econ_inmb_meds_w <- econ_inmb_meds_w[cost_predic_c[simulation_index==1&age_grp==1&iso3c%in%econ_inmb_meds_w$iso3c][,c('iso3c','gdpcap')], on='iso3c']
+
+ggplot(econ_inmb_meds_w) + 
+  geom_errorbar(aes(gdpcap,ymin=eti95L,ymax=eti95U,col=vacc_type)) +
+  geom_point(aes(gdpcap,y=median,col=vacc_type)) + 
+  # scale_y_log10() +
+  scale_x_log10() + xlab('GDP per capita') + 
+  ylab('Incremental net monetary benefit') + 
+  scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
+  facet_grid(vacc_type~., scales='free') + theme_bw()
+
+
+
+
+
+
+
+
+
+
+
+
+
+

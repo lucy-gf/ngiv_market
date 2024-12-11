@@ -75,6 +75,10 @@ for(iso3c_input in isos){
   infs_dt <- rbindlist(infs_rds_list)
   infs_dt[, iso3c := iso3c_input]
   
+  if(nrow(infs_dt[!complete.cases(infs_dt)]) > 0){
+    print('NA values found')
+  }
+  
   if(nrow(infs_out)==0){
     infs_out <- infs_dt
   }else{
