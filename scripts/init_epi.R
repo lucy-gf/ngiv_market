@@ -48,7 +48,7 @@ source(here::here('next_gen_flu','vacc_types.R'))
 source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 
 #### run epidemics ####
-for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[c(4,7)]){
+for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[c(7)]){
   source(here::here('scripts','epidemics','epid_simulations.R'))
 }
 

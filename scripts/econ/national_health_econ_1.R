@@ -21,8 +21,9 @@ econ_folder_name <- paste0(ifelse(disease_modification, '_disease_mod',''),
                            ifelse(outp_include, '_outpatient',''),
                            ifelse((WTP_choice=='gdp'), '_gdp_',''),
                            ifelse((WTP_choice=='gdp'), WTP_GDP_ratio,''),
-                           ifelse(discount_SA, '_discount0', ''))
-print(paste0('Folder = ', ifelse(econ_folder_name == '', 'base', econ_folder_name)))
+                           ifelse(discount_SA, '_discount0', ''),
+                           ifelse(price_used != 'midpoint', paste0('_doseprice_',price_used), ''))
+print(paste0('Folder = ', ifelse(econ_folder_name == '', 'base', paste0('base',econ_folder_name))))
 scenario_name <- 'base'
 
 if((disease_modification+discount_SA+outp_include+(WTP_choice=='gdp'))>1){
@@ -37,6 +38,10 @@ wastage <- 0.1
 
 # TODO - are we adding in wastage?
 
+if(!dir.exists(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name)))){
+  dir.create(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name)))
+}
+      
 ## loading epi data
 
 infs_out <- readRDS(here::here('output','data','epi','rds_output','vacc_global.rds'))
@@ -281,33 +286,48 @@ ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) 
   scale_fill_manual(values = vtn_colors) + xlab('') +
   labs(fill='Vaccine type') +
   geom_hline(yintercept=0, lty=2) +
-  ylab('Incremental net monetary benefit ($2022, billions)')
-
-ggplot(econ_nmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
-  geom_point(aes(x=total_DALYs/1e6, y=(total_hosp_cost + total_cost)/1e9, col=vacc_type)) +
-  facet_wrap(iso3c~., scales='free') + theme_bw() +
-  scale_color_manual(values = vtn_colors) +
-  xlab('DALYs (millions)') + ylab('Total cost ($2022, billions)')
+  ylab('Incremental net monetary benefit ($2022, billions)') +
+  ggtitle(paste0(scenario_name,econ_folder_name))
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_INMBs.png'),
+       width=30,height=20,units="cm")
 
 econ_nmb2 <- copy(econ_nmb)
 econ_nmb2[, total_cost := total_cost + total_hosp_cost]
-econ_nmb2 <- econ_nmb2[, c('vacc_type','iso3c','income_g','total_cost','total_DALYs')]
-econ_nmb_meds <- dt_to_meas(econ_nmb2, c('vacc_type','iso3c','income_g'))
+
+econ_nmb2_base <- econ_nmb2[vacc_type=='0']
+setnames(econ_nmb2_base, 'total_DALYs','base_total_DALYs')
+econ_nmb2 <- econ_nmb2[econ_nmb2_base[,c('vacc_type','simulation_index','iso3c','income_g','base_total_DALYs')], on = c('simulation_index','iso3c','income_g')]
+econ_nmb2[, DALYs_averted := base_total_DALYs - total_DALYs]
+
+econ_nmb2 <- econ_nmb2[, c('vacc_type','iso3c','income_g','total_cost','DALYs_averted')]
+econ_nmb2[, names := countrycode(iso3c, destination='country.name',origin='iso3c')]
+ggplot(econ_nmb2[!vacc_type=='0' & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_point(aes(x=DALYs_averted/1e6, y=(total_cost)/1e9, col=vacc_type)) +
+  facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
+  scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
+  xlab('DALYs averted (millions)') + ylab('Total cost ($2022, billions)') +
+  ggtitle(paste0(scenario_name,econ_folder_name))
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_planes_point.png'),
+       width=30,height=20,units="cm")
+
+econ_nmb_meds <- dt_to_meas(econ_nmb2, c('vacc_type','iso3c','names','income_g'))
 econ_nmb_meds_w <- dcast(econ_nmb_meds,
-                         vacc_type+iso3c+income_g~measure, 
-                         value.var=c('total_cost','total_DALYs'))
-econ_nmb_meds_w[, names := countrycode(iso3c, destination='country.name',origin='iso3c')]
-ggplot(econ_nmb_meds_w[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
-  geom_errorbar(aes(xmin=total_DALYs_eti95L/1e6, xmax=total_DALYs_eti95U/1e6,
+                         vacc_type+iso3c+names+income_g~measure, 
+                         value.var=c('total_cost','DALYs_averted'))
+ggplot(econ_nmb_meds_w[!vacc_type == '0' & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_errorbar(aes(xmin=DALYs_averted_eti95L/1e6, xmax=DALYs_averted_eti95U/1e6,
                     y=(total_cost_median)/1e9, col=vacc_type),alpha=0.8) +
-  geom_errorbar(aes(x=total_DALYs_median/1e6, 
+  geom_errorbar(aes(x=DALYs_averted_median/1e6, 
                     ymin=(total_cost_eti95L)/1e9, 
                     ymax=(total_cost_eti95U)/1e9,col=vacc_type),alpha=0.8) +
-  geom_point(aes(x=total_DALYs_median/1e6, y=(total_cost_median)/1e9, 
+  geom_point(aes(x=DALYs_averted_median/1e6, y=(total_cost_median)/1e9, 
                  col=vacc_type)) +
   facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
   scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
-  xlab('DALYs lost (millions)') + ylab('Total cost ($2022, billions)') + xlim(c(0,NA))
+  xlab('DALYs averted (millions)') + ylab('Total cost ($2022, billions)') +
+  ggtitle(paste0(scenario_name,econ_folder_name))
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_planes.png'),
+       width=30,height=20,units="cm")
 
 econ_inmb_meds <- dt_to_meas(econ_inmb, c('vacc_type','iso3c','income_g','names'))
 econ_inmb_meds_w <- dcast(econ_inmb_meds[, c('vacc_type','iso3c','income_g','inmb','measure')],
@@ -322,7 +342,7 @@ ggplot(econ_inmb_meds_w) +
   scale_x_log10() + xlab('GDP per capita') + 
   ylab('Incremental net monetary benefit') + 
   scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
-  facet_grid(vacc_type~., scales='free') + theme_bw()
+  facet_grid(vacc_type~., scales='free') + theme_bw() 
 
 
 
