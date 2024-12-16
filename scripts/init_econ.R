@@ -59,13 +59,11 @@ source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 #### produce shrunk datasets ####
 source(here::here('scripts','econ','shrink_epi_data.R'))
 
-#### produce econ data ####
-source(here::here('scripts','econ','make_econ_data'))
-
 ### run first econ analysis ####
-# source(here::here('scripts','econ','national_health_econ_1.R'))
+source(here::here('scripts','econ','national_health_econ_1.R'))
 
-
+### plot outputs ####
+source(here::here('scripts','econ','INMB_plots.R'))
 
 
 

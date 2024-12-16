@@ -21,6 +21,8 @@ exemplar_colors <- c("TUR"="#21908CFF", "ARG" = '#65156EFF', "AUS" = '#CC4678FF'
                      "GHA" = '#31688EFF')  
 income_colors <- c('High-income countries' = '#FDE725FF', 'Upper-middle-income countries' = '#21908CFF', 
                 'Lower-middle-income countries' = '#CC4678FF', 'Low-income countries' = '#440154FF')
+income_colors2 <- c('HIC' = '#FDE725FF', 'UMIC' = '#21908CFF', 
+                   'LMIC' = '#CC4678FF', 'LIC' = '#440154FF')
 WHO_colors <- c("EMR"="#21908CFF", "WPR" = '#CC4678FF', 
                      "EUR" = '#65156EFF', "SEAR" = '#51C56AFF', "AMR" = '#F89441FF', 
                      "AFR" = '#31688EFF')  

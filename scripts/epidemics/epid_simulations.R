@@ -70,7 +70,6 @@ for(iso3c_input in isos){
   
   #### RUN OUTPUTS #### 
   ## (parallelised across all vaccine types) ##
-  
   infs_rds_list <- mclapply(1:length(vacc_type_list), flu_parallel, mc.cores=length(vacc_type_list))
   infs_dt <- rbindlist(infs_rds_list)
   infs_dt[, iso3c := iso3c_input]

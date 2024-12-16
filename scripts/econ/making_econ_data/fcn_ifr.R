@@ -60,7 +60,7 @@ fcn_ifr <- function(
     mortality_rates, ## mortality rates (median, 95% CI) - will be a data.table with 3 age categories
     mortality_probs = c(0.5, 0.025, 0.975), ## corresponding quantile probabilities
     incidence, ## age-specific influenza incidence rates in 2010-2015, 100 simulations
-    incidence_ages = c(0,5,18,65) ## lower bound of each age group for the incidence counts
+    incidence_ages ## lower bound of each age group for the incidence counts
 ){
   
   ## make mortality_rates into a data.table if it isn't already
