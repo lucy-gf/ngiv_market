@@ -28,7 +28,7 @@ if(vacc_coverage == 'NO'){
   vacc_type_list[[1]]$VE <<- c(0,0,0,0)
 }
 
-infs_out <- data.table()
+infs_out <<- data.table()
 
 for(iso3c_input in isos){
   
@@ -59,7 +59,7 @@ for(iso3c_input in isos){
   epid_dt <<- epids %>% select(simulation_index, sus, trans, contains('match'), strain, day, month, year, simulation_cal_year,
                               pushback, init_ageing_date, init_nye, r0) %>% 
     rename(susceptibility=sus, transmissibility=trans, r0_to_scale=r0) %>% mutate(strain = substr(strain,5,5)) 
-  epid_dt$match <- matching_function(epid_dt, hemisphere_input)
+  epid_dt$match <<- matching_function(epid_dt, hemisphere_input)
   
   epid_dt <<- epid_dt %>% select(!c(strain,contains('_match'))) %>% 
     mutate(start_date_late = as.Date(paste0(as.numeric(day), '-', as.numeric(month), '-', 
