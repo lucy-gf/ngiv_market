@@ -35,7 +35,9 @@ key_dates <- c('01-04', '01-10') # vaccination and ageing dates (hemisphere-depe
 vacc_calendar_weeks <- 12
 
 vaccine_variable <- c('doses','coverage')[1] # using MMGH doses or % coverage?
-# currently only set up for doses as we don't have current coverage data
+# currently only set up for doses 
+
+vacc_coverage <- c('YES','NO')[2] # switch 'no vaccination' simulations off/on
 
 ################################################
 ################################################
@@ -47,10 +49,17 @@ source(here::here('next_gen_flu','vacc_types.R'))
 #### load MMGH data, merge subpopulations into model age groups ####
 source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 
+source(here::here('scripts','epidemics','epid_simulations.R'))
+
 #### run epidemics ####
-for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[c(7)]){
-  source(here::here('scripts','epidemics','epid_simulations.R'))
+if(vacc_coverage=='NO'){
+  mclapply(c('ARG','AUS','CAN','CHN','GBR','GHA','TUR'), fcn_parallel_itz, mc.cores=7)
+}else{
+  for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[1:7]){
+    fcn_parallel_itz(itz_input)
+  }
 }
+
 
 
 

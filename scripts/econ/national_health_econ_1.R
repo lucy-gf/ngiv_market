@@ -36,8 +36,6 @@ DALY_discount_rate_val <- c(0.03, 0)[1 + discount_SA]
 flu_duration <- 4/365
 wastage <- 0.1
 
-### TODO - are we adding in wastage? ###
-
 if(!dir.exists(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name)))){
   dir.create(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name)))
 }
@@ -69,7 +67,7 @@ country_specs[, country_type := case_when(
 )]
 
 doses <- demand_input[, c('iso3c','WHO_region','income_g','vacc_scenario','year','doses','vacc_used')]
-doses[, doses := ceiling(doses)]
+doses[, doses := ceiling(doses)*(1+wastage)] # inflating for wastage (extra purchasing)
 doses <- doses[iso3c %in% infs_out$iso3c]
 doses <- doses[, lapply(.SD, sum), by = c('iso3c','WHO_region','income_g','vacc_scenario','vacc_used','year')]
 doses[, vacc_type := substr(vacc_used,1,1)]
@@ -130,7 +128,6 @@ if(disease_modification == T){
 setnames(econ_cases_agg, 'value','infections')
 
 #### IFRS ####
-# TODO - move to making_econ, rerun with new model age groups
 
 print('IFRs')
 ## load ifrs
@@ -146,7 +143,6 @@ if(disease_modification==T){
 }
 
 #### IHRS ####
-# TODO - change model age groups for IHRs, move to make_econ
 
 print('IHRs')
 ## load ihrs

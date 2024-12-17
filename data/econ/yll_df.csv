@@ -1,0 +1,745 @@
+"","iso3c","age_grp","cluster_name","yll"
+"1","ARG",1,"Southern America",30.057361961068
+"2","AUS",1,"Oceania-Melanesia-Polynesia",31.0484331470087
+"3","FJI",1,"Oceania-Melanesia-Polynesia",28.9102528225588
+"4","NCL",1,"Oceania-Melanesia-Polynesia",30.5636473700905
+"5","NZL",1,"Oceania-Melanesia-Polynesia",30.9536170279394
+"6","SLB",1,"Oceania-Melanesia-Polynesia",29.196637268627
+"7","TON",1,"Oceania-Melanesia-Polynesia",29.3233104439259
+"8","VUT",1,"Oceania-Melanesia-Polynesia",29.1146271906649
+"9","WSM",1,"Oceania-Melanesia-Polynesia",29.5001121639021
+"10","BHS",1,"Northern America",29.6683489855544
+"11","BLZ",1,"Northern America",29.2445155854974
+"12","CAN",1,"Northern America",30.9337506703882
+"13","CUB",1,"Northern America",30.402644625402
+"14","ECU",1,"Northern America",30.1271346157186
+"15","GTM",1,"Northern America",28.7734845286266
+"16","HND",1,"Northern America",29.3193913846842
+"17","MEX",1,"Northern America",29.7524164961558
+"18","NIC",1,"Northern America",29.7659263514416
+"19","PER",1,"Northern America",29.6378192152196
+"20","PRI",1,"Northern America",30.4739499547781
+"21","USA",1,"Northern America",30.2899683593357
+"22","ALB",1,"Europe",30.2517373032788
+"23","AUT",1,"Europe",30.9745527153603
+"24","BEL",1,"Europe",30.9421516447691
+"25","BGR",1,"Europe",29.613358934687
+"26","BIH",1,"Europe",30.2611416700442
+"27","BLR",1,"Europe",29.8978621650656
+"28","CHE",1,"Europe",31.1692953633761
+"29","CZE",1,"Europe",30.5186720827217
+"30","DEU",1,"Europe",30.8088707625936
+"31","DNK",1,"Europe",30.938657112788
+"32","DZA",1,"Europe",30.0631377316297
+"33","ESP",1,"Europe",31.1341629080197
+"34","EST",1,"Europe",30.5568844306447
+"35","FIN",1,"Europe",30.9552178919302
+"36","FRA",1,"Europe",30.9875844254791
+"37","GBR",1,"Europe",30.9136662142238
+"38","GRC",1,"Europe",30.7758973341697
+"39","HRV",1,"Europe",30.6578326912127
+"40","HUN",1,"Europe",30.1061542721707
+"41","IRL",1,"Europe",31.0264064977007
+"42","ISL",1,"Europe",31.0373210843869
+"43","ITA",1,"Europe",31.1592846223053
+"44","LBY",1,"Europe",29.5419720268443
+"45","LTU",1,"Europe",29.9517019926347
+"46","LUX",1,"Europe",30.9930807642088
+"47","LVA",1,"Europe",30.1268695328532
+"48","MAR",1,"Europe",29.8788343740247
+"49","MDA",1,"Europe",29.1264547111225
+"50","MKD",1,"Europe",30.0524489634187
+"51","MLT",1,"Europe",31.0844315341196
+"52","MNE",1,"Europe",30.375773158974
+"53","NLD",1,"Europe",30.994987346711
+"54","NOR",1,"Europe",31.1008657439964
+"55","POL",1,"Europe",30.3395486612343
+"56","PRT",1,"Europe",30.9460846065817
+"57","ROU",1,"Europe",30.0098450107896
+"58","SRB",1,"Europe",30.0768945787019
+"59","SVK",1,"Europe",30.1313746627161
+"60","SVN",1,"Europe",30.9944798011492
+"61","SWE",1,"Europe",31.1006325693518
+"62","TUN",1,"Europe",29.7821151461872
+"63","UKR",1,"Europe",29.1016180263159
+"64","XKX",1,"Europe",30.6157782631299
+"65","BOL",1,"Southern America",28.2085113752553
+"66","BRA",1,"Southern America",29.6011717425849
+"67","BRB",1,"Southern America",30.243285742532
+"68","CHL",1,"Southern America",30.5280355207278
+"69","COL",1,"Southern America",29.5983204110087
+"70","CRI",1,"Southern America",30.278570438019
+"71","DOM",1,"Southern America",29.4035531834045
+"72","GUF",1,"Southern America",30.3220821368781
+"73","GUY",1,"Southern America",28.3508057727092
+"74","HTI",1,"Southern America",27.5142976165452
+"75","JAM",1,"Southern America",29.3519089877783
+"76","LCA",1,"Southern America",29.4020505028023
+"77","PAN",1,"Southern America",29.9018503803941
+"78","PRY",1,"Southern America",29.170001292521
+"79","SLV",1,"Southern America",29.2607289704955
+"80","SUR",1,"Southern America",29.1541802569029
+"81","TTO",1,"Southern America",29.6851727974198
+"82","URY",1,"Southern America",30.2784837172625
+"83","VCT",1,"Southern America",29.1061472215596
+"84","VEN",1,"Southern America",29.0939731663656
+"85","ARG",2,"Southern America",28.545993816837
+"86","AUS",2,"Oceania-Melanesia-Polynesia",29.6802332398077
+"87","FJI",2,"Oceania-Melanesia-Polynesia",27.5994646027244
+"88","NCL",2,"Oceania-Melanesia-Polynesia",29.3823481743295
+"89","NZL",2,"Oceania-Melanesia-Polynesia",29.539389467455
+"90","SLB",2,"Oceania-Melanesia-Polynesia",27.9754866325483
+"91","TON",2,"Oceania-Melanesia-Polynesia",27.6301020169682
+"92","VUT",2,"Oceania-Melanesia-Polynesia",27.8875536958805
+"93","WSM",2,"Oceania-Melanesia-Polynesia",28.2202216221907
+"94","BHS",2,"Northern America",28.1945004847149
+"95","BLZ",2,"Northern America",27.5127436460994
+"96","CAN",2,"Northern America",29.572196410534
+"97","CUB",2,"Northern America",28.992121296961
+"98","ECU",2,"Northern America",28.8973633586362
+"99","GTM",2,"Northern America",27.2732562825274
+"100","HND",2,"Northern America",27.8368668697239
+"101","MEX",2,"Northern America",28.2475668790253
+"102","NIC",2,"Northern America",28.3990819401046
+"103","PER",2,"Northern America",28.1769328100368
+"104","PRI",2,"Northern America",29.1789236649017
+"105","USA",2,"Northern America",28.6644915344202
+"106","ALB",2,"Europe",28.9001097171151
+"107","AUT",2,"Europe",29.5407841430749
+"108","BEL",2,"Europe",29.6270834482519
+"109","BGR",2,"Europe",27.8070794911393
+"110","BIH",2,"Europe",28.7194278071852
+"111","BLR",2,"Europe",28.1378397359084
+"112","CHE",2,"Europe",29.9073013598097
+"113","CZE",2,"Europe",29.0408187973586
+"114","DEU",2,"Europe",29.4498514597562
+"115","DNK",2,"Europe",29.5853423678995
+"116","DZA",2,"Europe",29.1681631060055
+"117","ESP",2,"Europe",29.8776516856597
+"118","EST",2,"Europe",29.0341605183184
+"119","FIN",2,"Europe",29.4406637204402
+"120","FRA",2,"Europe",29.6786458225398
+"121","GBR",2,"Europe",29.5453210170141
+"122","GRC",2,"Europe",29.3184786158359
+"123","HRV",2,"Europe",29.3357162964619
+"124","HUN",2,"Europe",28.5049092944938
+"125","IRL",2,"Europe",29.5921472937362
+"126","ISL",2,"Europe",29.6745210977627
+"127","ITA",2,"Europe",29.8674356345598
+"128","LBY",2,"Europe",27.9541321422452
+"129","LTU",2,"Europe",28.1395416792349
+"130","LUX",2,"Europe",29.7169041308118
+"131","LVA",2,"Europe",28.5093306336971
+"132","MAR",2,"Europe",28.7878185017875
+"133","MDA",2,"Europe",27.5920338772822
+"134","MKD",2,"Europe",28.665697001336
+"135","MLT",2,"Europe",30.0081785079121
+"136","MNE",2,"Europe",28.832222898353
+"137","NLD",2,"Europe",29.657780824079
+"138","NOR",2,"Europe",29.6895567915769
+"139","POL",2,"Europe",28.7536076427158
+"140","PRT",2,"Europe",29.6080278352852
+"141","ROU",2,"Europe",28.5411195615924
+"142","SRB",2,"Europe",28.6694053297519
+"143","SVK",2,"Europe",28.5181137994375
+"144","SVN",2,"Europe",29.7095799197016
+"145","SWE",2,"Europe",29.7648784256213
+"146","TUN",2,"Europe",28.5753440613625
+"147","UKR",2,"Europe",27.1147137486319
+"148","XKX",2,"Europe",29.3307307584144
+"149","BOL",2,"Southern America",27.0263248213166
+"150","BRA",2,"Southern America",28.0329849679246
+"151","BRB",2,"Southern America",28.8403970884676
+"152","CHL",2,"Southern America",29.08945407625
+"153","COL",2,"Southern America",28.0235340163
+"154","CRI",2,"Southern America",28.7284080799398
+"155","DOM",2,"Southern America",28.294152961972
+"156","GUF",2,"Southern America",28.9816303780746
+"157","GUY",2,"Southern America",26.7767353994892
+"158","HTI",2,"Southern America",26.9912347875102
+"159","JAM",2,"Southern America",27.7638475029764
+"160","LCA",2,"Southern America",27.9079077350512
+"161","PAN",2,"Southern America",28.6509752754177
+"162","PRY",2,"Southern America",27.5786507843264
+"163","SLV",2,"Southern America",27.4167656043326
+"164","SUR",2,"Southern America",27.5960936752797
+"165","TTO",2,"Southern America",28.3664567423907
+"166","URY",2,"Southern America",28.7180396757704
+"167","VCT",2,"Southern America",27.3171632941907
+"168","VEN",2,"Southern America",27.3880670462521
+"169","ARG",3,"Southern America",17.5040692671351
+"170","AUS",3,"Oceania-Melanesia-Polynesia",20.3869363580074
+"171","FJI",3,"Oceania-Melanesia-Polynesia",14.4542088477952
+"172","NCL",3,"Oceania-Melanesia-Polynesia",19.4893377131124
+"173","NZL",3,"Oceania-Melanesia-Polynesia",20.2389411725274
+"174","SLB",3,"Oceania-Melanesia-Polynesia",16.1568417194163
+"175","TON",3,"Oceania-Melanesia-Polynesia",16.7673567970623
+"176","VUT",3,"Oceania-Melanesia-Polynesia",16.1604024315922
+"177","WSM",3,"Oceania-Melanesia-Polynesia",16.5418028169695
+"178","BHS",3,"Northern America",18.4247698914583
+"179","BLZ",3,"Northern America",16.8559656807059
+"180","CAN",3,"Northern America",20.1152511733765
+"181","CUB",3,"Northern America",17.9037626583576
+"182","ECU",3,"Northern America",19.6159225805142
+"183","GTM",3,"Northern America",16.0939179729415
+"184","HND",3,"Northern America",15.5096923575191
+"185","MEX",3,"Northern America",18.4421214197892
+"186","NIC",3,"Northern America",18.1085386900356
+"187","PER",3,"Northern America",17.2836640003858
+"188","PRI",3,"Northern America",18.9393547590313
+"189","USA",3,"Northern America",19.0876247937149
+"190","ALB",3,"Europe",17.5619015007149
+"191","AUT",3,"Europe",19.151819149361
+"192","BEL",3,"Europe",19.2852822791681
+"193","BGR",3,"Europe",15.174547528712
+"194","BIH",3,"Europe",14.899340574814
+"195","BLR",3,"Europe",15.7003910751685
+"196","CHE",3,"Europe",19.8976522359068
+"197","CZE",3,"Europe",17.408781737759
+"198","DEU",3,"Europe",18.4612172182125
+"199","DNK",3,"Europe",18.6592792564364
+"200","DZA",3,"Europe",18.4487793473309
+"201","ESP",3,"Europe",19.6447368015948
+"202","EST",3,"Europe",18.2846860496557
+"203","FIN",3,"Europe",19.5984879875878
+"204","FRA",3,"Europe",19.9044552215945
+"205","GBR",3,"Europe",19.6220566647137
+"206","GRC",3,"Europe",18.4700900554492
+"207","HRV",3,"Europe",17.2801199654488
+"208","HUN",3,"Europe",15.9790978467895
+"209","IRL",3,"Europe",19.5533777676394
+"210","ISL",3,"Europe",19.5186443743451
+"211","ITA",3,"Europe",19.8387654018761
+"212","LBY",3,"Europe",16.3131932210641
+"213","LTU",3,"Europe",16.8983703693737
+"214","LUX",3,"Europe",18.8534266339079
+"215","LVA",3,"Europe",17.453989978019
+"216","MAR",3,"Europe",16.9224994185878
+"217","MDA",3,"Europe",13.9992849169004
+"218","MKD",3,"Europe",14.691355282476
+"219","MLT",3,"Europe",18.9126648566873
+"220","MNE",3,"Europe",16.3297072782786
+"221","NLD",3,"Europe",19.0846568969671
+"222","NOR",3,"Europe",19.7220355169187
+"223","POL",3,"Europe",17.3122213738298
+"224","PRT",3,"Europe",19.3707208858293
+"225","ROU",3,"Europe",15.4588265520259
+"226","SRB",3,"Europe",15.0097670533335
+"227","SVK",3,"Europe",16.4631809806121
+"228","SVN",3,"Europe",18.1930994719201
+"229","SWE",3,"Europe",19.8498117754356
+"230","TUN",3,"Europe",16.832436654974
+"231","UKR",3,"Europe",15.1681054214293
+"232","XKX",3,"Europe",17.7242742845344
+"233","BOL",3,"Southern America",13.8902887784253
+"234","BRA",3,"Southern America",17.7546698921795
+"235","BRB",3,"Southern America",19.1341451503897
+"236","CHL",3,"Southern America",18.9415967528963
+"237","COL",3,"Southern America",18.1082893430551
+"238","CRI",3,"Southern America",18.3218381634603
+"239","DOM",3,"Southern America",18.688640156163
+"240","GUF",3,"Southern America",17.5341461648674
+"241","GUY",3,"Southern America",15.0079216166378
+"242","HTI",3,"Southern America",15.5310611507009
+"243","JAM",3,"Southern America",15.5615414686349
+"244","LCA",3,"Southern America",15.9206248955406
+"245","PAN",3,"Southern America",19.3558741954503
+"246","PRY",3,"Southern America",16.0257863339652
+"247","SLV",3,"Southern America",17.7746842418477
+"248","SUR",3,"Southern America",15.9127893426973
+"249","TTO",3,"Southern America",17.9360618987454
+"250","URY",3,"Southern America",18.5662562960504
+"251","VCT",3,"Southern America",14.8453478094455
+"252","VEN",3,"Southern America",18.0210709751098
+"253","ARG",4,"Southern America",7.2191578892381
+"254","AUS",4,"Oceania-Melanesia-Polynesia",6.43323961247606
+"255","FJI",4,"Oceania-Melanesia-Polynesia",6.20788915970657
+"256","NCL",4,"Oceania-Melanesia-Polynesia",8.0788257839032
+"257","NZL",4,"Oceania-Melanesia-Polynesia",6.93712525219555
+"258","SLB",4,"Oceania-Melanesia-Polynesia",6.03838973378713
+"259","TON",4,"Oceania-Melanesia-Polynesia",6.50532120627406
+"260","VUT",4,"Oceania-Melanesia-Polynesia",6.23209209317322
+"261","WSM",4,"Oceania-Melanesia-Polynesia",6.35145488423592
+"262","BHS",4,"Northern America",7.25660486734437
+"263","BLZ",4,"Northern America",6.72053568861779
+"264","CAN",4,"Northern America",6.73796097270414
+"265","CUB",4,"Northern America",7.04654291182854
+"266","ECU",4,"Northern America",6.644210025763
+"267","GTM",4,"Northern America",6.73598833497429
+"268","HND",4,"Northern America",6.09471620258814
+"269","MEX",4,"Northern America",6.6339481555205
+"270","NIC",4,"Northern America",6.0802892404367
+"271","PER",4,"Northern America",6.15150246832563
+"272","PRI",4,"Northern America",7.87241834167962
+"273","USA",4,"Northern America",7.22835923738926
+"274","ALB",4,"Europe",6.17484720586322
+"275","AUT",4,"Europe",6.32890920523691
+"276","BEL",4,"Europe",6.4362686838793
+"277","BGR",4,"Europe",6.16740240785794
+"278","BIH",4,"Europe",6.14064895080439
+"279","BLR",4,"Europe",6.6395490484835
+"280","CHE",4,"Europe",6.172787244469
+"281","CZE",4,"Europe",6.47389842304769
+"282","DEU",4,"Europe",6.67431499949512
+"283","DNK",4,"Europe",6.48000246520713
+"284","DZA",4,"Europe",6.25665743310181
+"285","ESP",4,"Europe",6.37690049560203
+"286","EST",4,"Europe",7.11599449173451
+"287","FIN",4,"Europe",6.35852492273896
+"288","FRA",4,"Europe",6.58843175644419
+"289","GBR",4,"Europe",6.53579876526878
+"290","GRC",4,"Europe",6.61298212944347
+"291","HRV",4,"Europe",6.48629651079768
+"292","HUN",4,"Europe",6.74251308499256
+"293","IRL",4,"Europe",6.28784427466619
+"294","ISL",4,"Europe",6.29225675723407
+"295","ITA",4,"Europe",6.30273794329327
+"296","LBY",4,"Europe",6.27615086956642
+"297","LTU",4,"Europe",6.73287294946407
+"298","LUX",4,"Europe",6.78688027891482
+"299","LVA",4,"Europe",6.94540754112194
+"300","MAR",4,"Europe",6.25810481115294
+"301","MDA",4,"Europe",6.0519592609981
+"302","MKD",4,"Europe",5.79449665940147
+"303","MLT",4,"Europe",6.94680803684622
+"304","MNE",4,"Europe",6.65990755732525
+"305","NLD",4,"Europe",6.22643545854441
+"306","NOR",4,"Europe",6.29162972778418
+"307","POL",4,"Europe",6.75309313053878
+"308","PRT",4,"Europe",6.28750338984555
+"309","ROU",4,"Europe",6.50072660126163
+"310","SRB",4,"Europe",6.18981744586275
+"311","SVK",4,"Europe",6.52352418414266
+"312","SVN",4,"Europe",6.68962177214428
+"313","SWE",4,"Europe",6.25101445907916
+"314","TUN",4,"Europe",6.22612845220122
+"315","UKR",4,"Europe",6.14704603779592
+"316","XKX",4,"Europe",7.16882429862313
+"317","BOL",4,"Southern America",5.74845438050342
+"318","BRA",4,"Southern America",6.14053533730073
+"319","BRB",4,"Southern America",5.94020530817569
+"320","CHL",4,"Southern America",7.09231124492422
+"321","COL",4,"Southern America",6.25646801855531
+"322","CRI",4,"Southern America",6.06326712209741
+"323","DOM",4,"Southern America",7.38148736027092
+"324","GUF",4,"Southern America",6.4311191697133
+"325","GUY",4,"Southern America",6.72094839720534
+"326","HTI",4,"Southern America",5.9201524098621
+"327","JAM",4,"Southern America",5.9984986954386
+"328","LCA",4,"Southern America",6.04267441162012
+"329","PAN",4,"Southern America",7.45156080309624
+"330","PRY",4,"Southern America",6.45928918631327
+"331","SLV",4,"Southern America",6.56361272412978
+"332","SUR",4,"Southern America",6.81664087953276
+"333","TTO",4,"Southern America",7.40653564907689
+"334","URY",4,"Southern America",7.71876947210763
+"335","VCT",4,"Southern America",6.25211508572276
+"336","VEN",4,"Southern America",6.04425261309212
+"337","BGD",1,"Eastern and Southern Asia",29.5229874153426
+"338","BRN",1,"Eastern and Southern Asia",29.8914683370537
+"339","BTN",1,"Eastern and Southern Asia",29.3716639590253
+"340","CHN",1,"Eastern and Southern Asia",30.4414423054568
+"341","HKG",1,"Eastern and Southern Asia",31.1587685515443
+"342","IDN",1,"Eastern and Southern Asia",28.8434472585202
+"343","IND",1,"Eastern and Southern Asia",28.5921519422786
+"344","KHM",1,"Eastern and Southern Asia",28.8401008681465
+"345","KOR",1,"Eastern and Southern Asia",31.1504052746512
+"346","LAO",1,"Eastern and Southern Asia",28.670044299975
+"347","LKA",1,"Eastern and Southern Asia",30.2190259955568
+"348","MAC",1,"Eastern and Southern Asia",31.2691427409517
+"349","MDV",1,"Eastern and Southern Asia",30.7850601619756
+"350","MMR",1,"Eastern and Southern Asia",28.2898644156039
+"351","MNG",1,"Eastern and Southern Asia",29.6341498908588
+"352","MYS",1,"Eastern and Southern Asia",30.1997125987235
+"353","NPL",1,"Eastern and Southern Asia",29.0801995718682
+"354","PHL",1,"Eastern and Southern Asia",29.3414996936166
+"355","PNG",1,"Eastern and Southern Asia",28.0918074390243
+"356","PRK",1,"Eastern and Southern Asia",29.465929303452
+"357","RUS",1,"Eastern and Southern Asia",29.2925242806451
+"358","SGP",1,"Eastern and Southern Asia",31.1637281417088
+"359","THA",1,"Eastern and Southern Asia",30.3354978386971
+"360","TLS",1,"Eastern and Southern Asia",28.6755891066946
+"361","VNM",1,"Eastern and Southern Asia",29.5583226583675
+"362","JPN",1,"Eastern and Southern Asia",31.184023585965
+"363","TWN",1,"Eastern and Southern Asia",30.7641188354373
+"364","AGO",1,"Africa",27.1074062465026
+"365","BDI",1,"Africa",27.0227330246094
+"366","BEN",1,"Africa",26.4316587432649
+"367","BFA",1,"Africa",26.6340593287256
+"368","BWA",1,"Africa",28.019145266065
+"369","CAF",1,"Africa",25.3387432898459
+"370","CIV",1,"Africa",26.4237603941164
+"371","CMR",1,"Africa",26.9868960178743
+"372","COD",1,"Africa",26.4648088287589
+"373","COG",1,"Africa",27.5109239296992
+"374","COM",1,"Africa",27.5467830802452
+"375","CPV",1,"Africa",29.8523849627234
+"376","ETH",1,"Africa",27.8948006688228
+"377","GAB",1,"Africa",28.1318103526236
+"378","GHA",1,"Africa",27.4824809490642
+"379","GIN",1,"Africa",26.1324811225026
+"380","GMB",1,"Africa",27.3738171997473
+"381","GNB",1,"Africa",26.7203611874001
+"382","GNQ",1,"Africa",26.9608836683044
+"383","KEN",1,"Africa",27.4121537279787
+"384","LBR",1,"Africa",26.8732416156738
+"385","LSO",1,"Africa",25.0960831351296
+"386","MDG",1,"Africa",27.8069125866905
+"387","MLI",1,"Africa",26.5120282177148
+"388","MOZ",1,"Africa",26.7004066053063
+"389","MRT",1,"Africa",27.8062344610256
+"390","MUS",1,"Africa",29.7052194105622
+"391","MWI",1,"Africa",27.626277195615
+"392","NAM",1,"Africa",26.732320462629
+"393","NER",1,"Africa",27.2505460844792
+"394","NGA",1,"Africa",24.624025491712
+"395","SDN",1,"Africa",27.8013860623921
+"396","SEN",1,"Africa",28.6374851564705
+"397","SLE",1,"Africa",26.57501996508
+"398","SSD",1,"Africa",25.3004206368211
+"399","STP",1,"Africa",28.8635049714578
+"400","SWZ",1,"Africa",26.2403943731375
+"401","TCD",1,"Africa",24.6591766971596
+"402","TGO",1,"Africa",26.922194061495
+"403","TZA",1,"Africa",28.2780284730728
+"404","UGA",1,"Africa",27.7661896983215
+"405","ZAF",1,"Africa",27.3969799756538
+"406","ZMB",1,"Africa",27.3134770718222
+"407","ZWE",1,"Africa",26.7852537478235
+"408","SOM",1,"Africa",25.5726444199328
+"409","AFG",1,"Asia-Europe",27.3959992954172
+"410","ARE",1,"Asia-Europe",30.6250166569279
+"411","ARM",1,"Asia-Europe",29.8605281251068
+"412","AZE",1,"Asia-Europe",29.6102779536793
+"413","BHR",1,"Asia-Europe",30.6454946308424
+"414","CYP",1,"Asia-Europe",30.9670464198314
+"415","DJI",1,"Asia-Europe",27.2492124155234
+"416","EGY",1,"Asia-Europe",29.3299858965604
+"417","ERI",1,"Asia-Europe",28.102697525481
+"418","GEO",1,"Asia-Europe",29.5944493569856
+"419","IRN",1,"Asia-Europe",29.8387702334563
+"420","IRQ",1,"Asia-Europe",29.3238238936934
+"421","ISR",1,"Asia-Europe",30.9906685776882
+"422","JOR",1,"Asia-Europe",29.8700845944245
+"423","KAZ",1,"Asia-Europe",29.2850195047465
+"424","KGZ",1,"Asia-Europe",29.3373346816693
+"425","KWT",1,"Asia-Europe",30.7338508341496
+"426","LBN",1,"Asia-Europe",30.0182334365002
+"427","OMN",1,"Asia-Europe",29.9344651265387
+"428","PAK",1,"Asia-Europe",27.9630216596086
+"429","PSE",1,"Asia-Europe",29.7213423972019
+"430","QAT",1,"Asia-Europe",30.902461623392
+"431","RWA",1,"Asia-Europe",28.3482136524547
+"432","SAU",1,"Asia-Europe",30.3914837061552
+"433","SYR",1,"Asia-Europe",29.3476559306766
+"434","TJK",1,"Asia-Europe",29.2427971100974
+"435","TKM",1,"Asia-Europe",28.7726206275754
+"436","TUR",1,"Asia-Europe",30.4739791346725
+"437","UZB",1,"Asia-Europe",29.509696053017
+"438","YEM",1,"Asia-Europe",27.5099292500331
+"439","BGD",2,"Eastern and Southern Asia",28.5470106742097
+"440","BRN",2,"Eastern and Southern Asia",28.4730853068534
+"441","BTN",2,"Eastern and Southern Asia",28.3860297607294
+"442","CHN",2,"Eastern and Southern Asia",29.2024892929231
+"443","HKG",2,"Eastern and Southern Asia",30.1622903452684
+"444","IDN",2,"Eastern and Southern Asia",27.4094136884415
+"445","IND",2,"Eastern and Southern Asia",27.5266152820032
+"446","KHM",2,"Eastern and Southern Asia",27.8114593433626
+"447","KOR",2,"Eastern and Southern Asia",30.0604038825227
+"448","LAO",2,"Eastern and Southern Asia",27.9151702124467
+"449","LKA",2,"Eastern and Southern Asia",28.7399506860189
+"450","MAC",2,"Eastern and Southern Asia",30.2074098758573
+"451","MDV",2,"Eastern and Southern Asia",29.5173276308021
+"452","MMR",2,"Eastern and Southern Asia",27.5476212478756
+"453","MNG",2,"Eastern and Southern Asia",27.9948449271873
+"454","MYS",2,"Eastern and Southern Asia",28.7776732704445
+"455","NPL",2,"Eastern and Southern Asia",28.0140114565675
+"456","PHL",2,"Eastern and Southern Asia",28.3892748818555
+"457","PNG",2,"Eastern and Southern Asia",27.2243152838351
+"458","PRK",2,"Eastern and Southern Asia",28.3481962551114
+"459","RUS",2,"Eastern and Southern Asia",27.2769783045769
+"460","SGP",2,"Eastern and Southern Asia",29.9865455921703
+"461","THA",2,"Eastern and Southern Asia",29.001686482627
+"462","TLS",2,"Eastern and Southern Asia",27.9186382837248
+"463","VNM",2,"Eastern and Southern Asia",28.553812984126
+"464","JPN",2,"Eastern and Southern Asia",29.9511201969819
+"465","TWN",2,"Eastern and Southern Asia",29.3705590204629
+"466","AGO",2,"Africa",26.7601170292758
+"467","BDI",2,"Africa",26.5051724227865
+"468","BEN",2,"Africa",26.5178297023843
+"469","BFA",2,"Africa",26.4564444050738
+"470","BWA",2,"Africa",27.1434130054994
+"471","CAF",2,"Africa",25.0913816456372
+"472","CIV",2,"Africa",25.972610475916
+"473","CMR",2,"Africa",26.4466550444671
+"474","COD",2,"Africa",26.3552366915615
+"475","COG",2,"Africa",26.6083475395664
+"476","COM",2,"Africa",27.0466480202086
+"477","CPV",2,"Africa",28.6128046511881
+"478","ETH",2,"Africa",27.2401649573631
+"479","GAB",2,"Africa",27.1560542836564
+"480","GHA",2,"Africa",26.8198373864177
+"481","GIN",2,"Africa",26.443549919372
+"482","GMB",2,"Africa",26.6523911354521
+"483","GNB",2,"Africa",26.3101402565805
+"484","GNQ",2,"Africa",26.6500888449931
+"485","KEN",2,"Africa",26.0182005811129
+"486","LBR",2,"Africa",26.6438904444431
+"487","LSO",2,"Africa",24.4468361316424
+"488","MDG",2,"Africa",27.1923395804038
+"489","MLI",2,"Africa",26.4645199409599
+"490","MOZ",2,"Africa",26.1700534087832
+"491","MRT",2,"Africa",27.3853096903623
+"492","MUS",2,"Africa",28.2596182025736
+"493","MWI",2,"Africa",26.3291383678218
+"494","NAM",2,"Africa",25.0595044880023
+"495","NER",2,"Africa",26.9368130642946
+"496","NGA",2,"Africa",25.217682083462
+"497","SDN",2,"Africa",27.36298563584
+"498","SEN",2,"Africa",27.6806408554966
+"499","SLE",2,"Africa",26.9609685925111
+"500","SSD",2,"Africa",25.5302413844601
+"501","STP",2,"Africa",27.193105529211
+"502","SWZ",2,"Africa",24.7662035208049
+"503","TCD",2,"Africa",24.9802750318102
+"504","TGO",2,"Africa",26.586223084316
+"505","TZA",2,"Africa",27.4925675150528
+"506","UGA",2,"Africa",26.6598001475272
+"507","ZAF",2,"Africa",25.7581528432338
+"508","ZMB",2,"Africa",26.4847199880333
+"509","ZWE",2,"Africa",25.6604746135486
+"510","SOM",2,"Africa",25.8794593362147
+"511","AFG",2,"Asia-Europe",26.5317413249395
+"512","ARE",2,"Asia-Europe",29.3148183945038
+"513","ARM",2,"Asia-Europe",28.2033961462566
+"514","AZE",2,"Asia-Europe",28.3303314382555
+"515","BHR",2,"Asia-Europe",29.3576366199676
+"516","CYP",2,"Asia-Europe",29.6566378081157
+"517","DJI",2,"Asia-Europe",26.7328028918056
+"518","EGY",2,"Asia-Europe",27.9052390869772
+"519","ERI",2,"Asia-Europe",27.3492887797377
+"520","GEO",2,"Asia-Europe",27.7323183026655
+"521","IRN",2,"Asia-Europe",28.4739048289825
+"522","IRQ",2,"Asia-Europe",28.1876268333589
+"523","ISR",2,"Asia-Europe",29.7304315219638
+"524","JOR",2,"Asia-Europe",28.6660805030689
+"525","KAZ",2,"Asia-Europe",27.4261429021999
+"526","KGZ",2,"Asia-Europe",27.7458010417176
+"527","KWT",2,"Asia-Europe",29.5312478263306
+"528","LBN",2,"Asia-Europe",28.5597795519763
+"529","OMN",2,"Asia-Europe",28.4211205069997
+"530","PAK",2,"Asia-Europe",27.7975367620038
+"531","PSE",2,"Asia-Europe",28.5572568228301
+"532","QAT",2,"Asia-Europe",29.7005071890199
+"533","RWA",2,"Asia-Europe",27.3988914061118
+"534","SAU",2,"Asia-Europe",28.9757309717509
+"535","SYR",2,"Asia-Europe",28.0856394016298
+"536","TJK",2,"Asia-Europe",28.1044180891349
+"537","TKM",2,"Asia-Europe",27.959661186697
+"538","TUR",2,"Asia-Europe",29.1179693846949
+"539","UZB",2,"Asia-Europe",27.9529166029015
+"540","YEM",2,"Asia-Europe",26.9936327438249
+"541","BGD",3,"Eastern and Southern Asia",17.4638623180356
+"542","BRN",3,"Eastern and Southern Asia",16.9004513735496
+"543","BTN",3,"Eastern and Southern Asia",16.4306096755554
+"544","CHN",3,"Eastern and Southern Asia",18.2472942926598
+"545","HKG",3,"Eastern and Southern Asia",19.2546418052193
+"546","IDN",3,"Eastern and Southern Asia",15.0164796666161
+"547","IND",3,"Eastern and Southern Asia",15.2915209829984
+"548","KHM",3,"Eastern and Southern Asia",17.0406484509293
+"549","KOR",3,"Eastern and Southern Asia",19.2900177695768
+"550","LAO",3,"Eastern and Southern Asia",16.1906767658934
+"551","LKA",3,"Eastern and Southern Asia",17.7908077647248
+"552","MAC",3,"Eastern and Southern Asia",20.0988172737968
+"553","MDV",3,"Eastern and Southern Asia",18.6083421054938
+"554","MMR",3,"Eastern and Southern Asia",16.2328106695427
+"555","MNG",3,"Eastern and Southern Asia",16.3589469824822
+"556","MYS",3,"Eastern and Southern Asia",17.0702275500154
+"557","NPL",3,"Eastern and Southern Asia",16.1850374910089
+"558","PHL",3,"Eastern and Southern Asia",16.4849044443187
+"559","PNG",3,"Eastern and Southern Asia",15.6456814221059
+"560","PRK",3,"Eastern and Southern Asia",18.347452047946
+"561","RUS",3,"Eastern and Southern Asia",16.1160476810357
+"562","SGP",3,"Eastern and Southern Asia",19.1947416983065
+"563","THA",3,"Eastern and Southern Asia",19.9556430510817
+"564","TLS",3,"Eastern and Southern Asia",16.1582292101537
+"565","VNM",3,"Eastern and Southern Asia",18.7720527116374
+"566","JPN",3,"Eastern and Southern Asia",20.4070959810799
+"567","TWN",3,"Eastern and Southern Asia",19.5786382144212
+"568","AGO",3,"Africa",15.6316963336868
+"569","BDI",3,"Africa",16.1894079689972
+"570","BEN",3,"Africa",16.1814633876133
+"571","BFA",3,"Africa",15.3813839241211
+"572","BWA",3,"Africa",16.3717415257413
+"573","CAF",3,"Africa",14.8682482858822
+"574","CIV",3,"Africa",15.1789844406163
+"575","CMR",3,"Africa",15.2244648816503
+"576","COD",3,"Africa",15.8810193457368
+"577","COG",3,"Africa",15.6464873508486
+"578","COM",3,"Africa",15.0964608821317
+"579","CPV",3,"Africa",17.4998916567798
+"580","ETH",3,"Africa",16.5126662862657
+"581","GAB",3,"Africa",15.4885431232472
+"582","GHA",3,"Africa",16.5170369418796
+"583","GIN",3,"Africa",16.0614112262014
+"584","GMB",3,"Africa",15.9367991643573
+"585","GNB",3,"Africa",15.0885357535806
+"586","GNQ",3,"Africa",15.1030073252805
+"587","KEN",3,"Africa",15.5272465381132
+"588","LBR",3,"Africa",15.2557292000764
+"589","LSO",3,"Africa",14.2802833557709
+"590","MDG",3,"Africa",16.3444444592731
+"591","MLI",3,"Africa",15.3361919429676
+"592","MOZ",3,"Africa",14.7964993508601
+"593","MRT",3,"Africa",14.8800104227996
+"594","MUS",3,"Africa",17.2739021779777
+"595","MWI",3,"Africa",15.3167852620371
+"596","NAM",3,"Africa",14.1055469071117
+"597","NER",3,"Africa",15.3224084245395
+"598","NGA",3,"Africa",16.4026086075264
+"599","SDN",3,"Africa",16.7315905518721
+"600","SEN",3,"Africa",15.6883921817894
+"601","SLE",3,"Africa",15.0532882020856
+"602","SSD",3,"Africa",15.9941466296224
+"603","STP",3,"Africa",16.2667831895548
+"604","SWZ",3,"Africa",14.2032852972011
+"605","TCD",3,"Africa",15.4801525070016
+"606","TGO",3,"Africa",16.2368865091418
+"607","TZA",3,"Africa",15.6790559945065
+"608","UGA",3,"Africa",15.4994550331109
+"609","ZAF",3,"Africa",14.8569182194447
+"610","ZMB",3,"Africa",14.9346391899436
+"611","ZWE",3,"Africa",15.0849186583329
+"612","SOM",3,"Africa",15.3632592238311
+"613","AFG",3,"Asia-Europe",15.7027034370311
+"614","ARE",3,"Asia-Europe",17.5381746230508
+"615","ARM",3,"Asia-Europe",15.523413726496
+"616","AZE",3,"Asia-Europe",17.0901766439521
+"617","BHR",3,"Asia-Europe",17.4336315777217
+"618","CYP",3,"Asia-Europe",18.443758943784
+"619","DJI",3,"Asia-Europe",16.2147738914442
+"620","EGY",3,"Asia-Europe",14.0129164749496
+"621","ERI",3,"Asia-Europe",16.6235162835554
+"622","GEO",3,"Asia-Europe",15.5287337892547
+"623","IRN",3,"Asia-Europe",17.3108052423315
+"624","IRQ",3,"Asia-Europe",15.7937680657412
+"625","ISR",3,"Asia-Europe",18.9030235559607
+"626","JOR",3,"Asia-Europe",16.0517210264538
+"627","KAZ",3,"Asia-Europe",14.7356545578767
+"628","KGZ",3,"Asia-Europe",15.4966342222736
+"629","KWT",3,"Asia-Europe",17.6798636022753
+"630","LBN",3,"Asia-Europe",15.9048030503783
+"631","OMN",3,"Asia-Europe",15.6722334413971
+"632","PAK",3,"Asia-Europe",15.536707814023
+"633","PSE",3,"Asia-Europe",15.9554322396735
+"634","QAT",3,"Asia-Europe",18.208294835354
+"635","RWA",3,"Asia-Europe",16.2756718408379
+"636","SAU",3,"Asia-Europe",17.8204745676536
+"637","SYR",3,"Asia-Europe",17.5378568047985
+"638","TJK",3,"Asia-Europe",15.9296812883908
+"639","TKM",3,"Asia-Europe",16.0215814279125
+"640","TUR",3,"Asia-Europe",17.5658370238904
+"641","UZB",3,"Asia-Europe",15.6143463095862
+"642","YEM",3,"Asia-Europe",15.6610698474757
+"643","BGD",4,"Eastern and Southern Asia",6.39216029292177
+"644","BRN",4,"Eastern and Southern Asia",6.34295528842135
+"645","BTN",4,"Eastern and Southern Asia",6.1163132318502
+"646","CHN",4,"Eastern and Southern Asia",6.45161696925614
+"647","HKG",4,"Eastern and Southern Asia",7.20030103051821
+"648","IDN",4,"Eastern and Southern Asia",5.92489520240075
+"649","IND",4,"Eastern and Southern Asia",6.35743531078161
+"650","KHM",4,"Eastern and Southern Asia",6.20734926223072
+"651","KOR",4,"Eastern and Southern Asia",7.11891626586411
+"652","LAO",4,"Eastern and Southern Asia",6.06699373208007
+"653","LKA",4,"Eastern and Southern Asia",6.54625200259511
+"654","MAC",4,"Eastern and Southern Asia",6.75442293180427
+"655","MDV",4,"Eastern and Southern Asia",6.54608659717923
+"656","MMR",4,"Eastern and Southern Asia",6.05160792979159
+"657","MNG",4,"Eastern and Southern Asia",6.83962504409127
+"658","MYS",4,"Eastern and Southern Asia",6.68410927605412
+"659","NPL",4,"Eastern and Southern Asia",6.07417962790279
+"660","PHL",4,"Eastern and Southern Asia",6.15153330366621
+"661","PNG",4,"Eastern and Southern Asia",6.09135582274005
+"662","PRK",4,"Eastern and Southern Asia",6.51131608742625
+"663","RUS",4,"Eastern and Southern Asia",6.55399016576659
+"664","SGP",4,"Eastern and Southern Asia",7.25048724419818
+"665","THA",4,"Eastern and Southern Asia",8.44536594567212
+"666","TLS",4,"Eastern and Southern Asia",6.07542062665838
+"667","VNM",4,"Eastern and Southern Asia",6.75091352802061
+"668","JPN",4,"Eastern and Southern Asia",6.71327277153457
+"669","TWN",4,"Eastern and Southern Asia",6.95327750650108
+"670","AGO",4,"Africa",6.08578470295726
+"671","BDI",4,"Africa",6.0022314559255
+"672","BEN",4,"Africa",5.9741331680878
+"673","BFA",4,"Africa",5.47652900935289
+"674","BWA",4,"Africa",6.7042137859684
+"675","CAF",4,"Africa",6.22038444809792
+"676","CIV",4,"Africa",6.35604573667398
+"677","CMR",4,"Africa",6.03904258793867
+"678","COD",4,"Africa",5.90950567951343
+"679","COG",4,"Africa",6.09746052709373
+"680","COM",4,"Africa",5.86177742708245
+"681","CPV",4,"Africa",6.2136309053002
+"682","ETH",4,"Africa",6.05406497725487
+"683","GAB",4,"Africa",6.2684047865438
+"684","GHA",4,"Africa",6.05159829528724
+"685","GIN",4,"Africa",5.95122819319742
+"686","GMB",4,"Africa",5.92056250748458
+"687","GNB",4,"Africa",5.89894840636611
+"688","GNQ",4,"Africa",5.87198411386081
+"689","KEN",4,"Africa",6.78656110632923
+"690","LBR",4,"Africa",5.9755659468201
+"691","LSO",4,"Africa",6.43267316538467
+"692","MDG",4,"Africa",6.06096984475739
+"693","MLI",4,"Africa",5.45167558312908
+"694","MOZ",4,"Africa",5.62475029906605
+"695","MRT",4,"Africa",5.74154463838253
+"696","MUS",4,"Africa",6.71395636202774
+"697","MWI",4,"Africa",6.53612475664902
+"698","NAM",4,"Africa",6.00134621891436
+"699","NER",4,"Africa",5.51941660900703
+"700","NGA",4,"Africa",5.9292095155033
+"701","SDN",4,"Africa",6.08283610134652
+"702","SEN",4,"Africa",5.61800654284668
+"703","SLE",4,"Africa",5.78415591879826
+"704","SSD",4,"Africa",5.8671525256061
+"705","STP",4,"Africa",6.42903259331722
+"706","SWZ",4,"Africa",6.05549550117099
+"707","TCD",4,"Africa",5.70097947943058
+"708","TGO",4,"Africa",5.58381470080299
+"709","TZA",4,"Africa",6.43742304194172
+"710","UGA",4,"Africa",5.67416948553307
+"711","ZAF",4,"Africa",6.51308736819839
+"712","ZMB",4,"Africa",5.84020757869712
+"713","ZWE",4,"Africa",6.3903867942481
+"714","SOM",4,"Africa",5.80627525194314
+"715","AFG",4,"Asia-Europe",5.87188763612799
+"716","ARE",4,"Asia-Europe",6.2671774051654
+"717","ARM",4,"Asia-Europe",6.64599124627899
+"718","AZE",4,"Asia-Europe",6.25153587708714
+"719","BHR",4,"Asia-Europe",6.15846693291971
+"720","CYP",4,"Asia-Europe",6.55652718606974
+"721","DJI",4,"Asia-Europe",5.98116901800311
+"722","EGY",4,"Asia-Europe",5.9737613896065
+"723","ERI",4,"Asia-Europe",6.1508203762831
+"724","GEO",4,"Asia-Europe",6.1452948340013
+"725","IRN",4,"Asia-Europe",6.10887818096815
+"726","IRQ",4,"Asia-Europe",6.02224014118295
+"727","ISR",4,"Asia-Europe",6.92196551733045
+"728","JOR",4,"Asia-Europe",6.14573058432455
+"729","KAZ",4,"Asia-Europe",6.17691544452087
+"730","KGZ",4,"Asia-Europe",6.02639815545109
+"731","KWT",4,"Asia-Europe",6.2728615872433
+"732","LBN",4,"Asia-Europe",6.10042387711571
+"733","OMN",4,"Asia-Europe",5.89222912122132
+"734","PAK",4,"Asia-Europe",5.9638810953587
+"735","PSE",4,"Asia-Europe",6.15197737152166
+"736","QAT",4,"Asia-Europe",6.23794337591127
+"737","RWA",4,"Asia-Europe",6.30310510233938
+"738","SAU",4,"Asia-Europe",6.4077535899814
+"739","SYR",4,"Asia-Europe",6.23109739135428
+"740","TJK",4,"Asia-Europe",6.21251494327805
+"741","TKM",4,"Asia-Europe",6.12230649902436
+"742","TUR",4,"Asia-Europe",6.47558628662845
+"743","UZB",4,"Asia-Europe",6.16385242330991
+"744","YEM",4,"Asia-Europe",5.87528239800746

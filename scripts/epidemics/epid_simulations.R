@@ -1,5 +1,7 @@
 #### Epidemic simulations ####
 
+fcn_parallel_itz <- function(itz_input){
+  
 # using:
 # coverage/demand assumptions (from MMGH)
 # epi data (from previous work, ITZ-specific)
@@ -10,31 +12,40 @@ if(vaccine_variable == 'coverage'){
 
 ## set up next_gen_flu code
 source(here::here('next_gen_flu','flu_parallel.R'))
-  
-hemisphere_input <- demand_input[cluster_code==itz_input]$hemisphere[1]
-isos <- unique(demand_input[cluster_code==itz_input]$iso3c)
 
-sampled_epids <- data.table(read_csv(here::here('data','epi','sampled_epids',paste0('sampled_epidemics_30_100_',itz_input,'_wr0.csv')), show_col_types=F))
-epids <- sampled_epids[simulation_cal_year <= years_of_analysis & simulation_index <= simulations]
-ageing_date <- ifelse(hemisphere_input=='NH', key_dates[1], key_dates[2])
-ageing_day <- as.numeric(substr(ageing_date, 1, 2))
-ageing_month <- as.numeric(substr(ageing_date, 4, 5))
+hemisphere_input <<- demand_input[cluster_code==itz_input]$hemisphere[1]
+isos <<- unique(demand_input[cluster_code==itz_input]$iso3c)
+
+sampled_epids <<- data.table(read_csv(here::here('data','epi','sampled_epids',paste0('sampled_epidemics_30_100_',itz_input,'_wr0.csv')), show_col_types=F))
+epids <<- sampled_epids[simulation_cal_year <= years_of_analysis & simulation_index <= simulations]
+ageing_date <<- ifelse(hemisphere_input=='NH', key_dates[1], key_dates[2])
+ageing_day <<- as.numeric(substr(ageing_date, 1, 2))
+ageing_month <<- as.numeric(substr(ageing_date, 4, 5))
+
+if(vacc_coverage == 'NO'){
+  vacc_type_list <<- list(vacc_type_list[[1]])
+  names(vacc_type_list) <<- '0'
+  vacc_type_list[[1]]$VE <<- c(0,0,0,0)
+}
 
 infs_out <- data.table()
 
 for(iso3c_input in isos){
   
-  iso_time <- Sys.time()
+  itz_input <<- itz_input
+  iso3c_input <<- iso3c_input
+  
+  iso_time <<- Sys.time()
   print(iso3c_input)
   
   printed <<- F
   
   ## VACCINE DATA
-  doses <- demand_input[iso3c==iso3c_input]
-  vacc_calendar_start <- ifelse(hemisphere_input=='NH', key_dates[2], key_dates[1])
+  doses <<- demand_input[iso3c==iso3c_input]
+  vacc_calendar_start <<- ifelse(hemisphere_input=='NH', key_dates[2], key_dates[1])
   
   ## EPIDEMIC DATA
-  matching_function <- function(epid, hemisphere){
+  matching_function <<- function(epid, hemisphere){
     if(hemisphere=='NH'){
       vec <- epid$N_A_match
       vec[which(epid$strain=='B')] <- epid$N_B_match[which(epid$strain=='B')]
@@ -45,12 +56,12 @@ for(iso3c_input in isos){
     vec
   }
   
-  epid_dt <- epids %>% select(simulation_index, sus, trans, contains('match'), strain, day, month, year, simulation_cal_year,
+  epid_dt <<- epids %>% select(simulation_index, sus, trans, contains('match'), strain, day, month, year, simulation_cal_year,
                               pushback, init_ageing_date, init_nye, r0) %>% 
     rename(susceptibility=sus, transmissibility=trans, r0_to_scale=r0) %>% mutate(strain = substr(strain,5,5)) 
   epid_dt$match <- matching_function(epid_dt, hemisphere_input)
   
-  epid_dt <- epid_dt %>% select(!c(strain,contains('_match'))) %>% 
+  epid_dt <<- epid_dt %>% select(!c(strain,contains('_match'))) %>% 
     mutate(start_date_late = as.Date(paste0(as.numeric(day), '-', as.numeric(month), '-', 
                                             (start_year_of_analysis + simulation_cal_year - 1)), '%d-%m-%Y'),
            original_date = as.Date(paste0(as.numeric(day), '-', month, '-', year), '%d-%m-%Y'),
@@ -70,8 +81,12 @@ for(iso3c_input in isos){
   
   #### RUN OUTPUTS #### 
   ## (parallelised across all vaccine types) ##
-  infs_rds_list <- mclapply(1:length(vacc_type_list), flu_parallel, mc.cores=length(vacc_type_list))
-  infs_dt <- rbindlist(infs_rds_list)
+  if(vacc_coverage=='NO'){
+    infs_dt <- flu_parallel(1)
+  }else{
+    infs_rds_list <- mclapply(1:length(vacc_type_list), flu_parallel, mc.cores=length(vacc_type_list))
+    infs_dt <- rbindlist(infs_rds_list)
+  }
   infs_dt[, iso3c := iso3c_input]
   
   if(nrow(infs_dt[!complete.cases(infs_dt)]) > 0){
@@ -89,5 +104,8 @@ for(iso3c_input in isos){
 
 #### SAVE OUTPUTS ####
 
-saveRDS(infs_out, file = here::here('output','data','epi','rds_output',paste0('vacc_',itz_input,'.rds')))
+saveRDS(infs_out, file = here::here('output','data','epi','rds_output',paste0('vacc_',itz_input,ifelse(vacc_coverage=='NO','_novacc',''),'.rds')))
+
+}
+
 

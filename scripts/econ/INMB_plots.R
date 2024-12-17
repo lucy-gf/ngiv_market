@@ -1,6 +1,9 @@
 
-### ECON PLOTS ###
+### ECON PLOTS AND TABLES ###
 options(scipen=1000000)
+
+scenario_name <- 'base'
+econ_folder_name <- ''
 
 ## LOAD DATA ##
 econ_cases_agg <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'econ_cases_agg.rds'))
@@ -105,6 +108,7 @@ ggplot(econ_inmb_meds_w) +
 
 WHO_regions <- data.table(read_csv(here::here('data','econ','WHO_regions.csv'), show_col_types=F))
 setnames(WHO_regions, 'country_code','iso3c')
+WHO_regions <- WHO_regions[iso3c %in% econ_inmb_meds_w$iso3c]
 econ_inmb_meds_w <- econ_inmb_meds_w[WHO_regions, on='iso3c']
 
 zero_val <- min(econ_inmb_meds_w[median > 0]$median, econ_inmb_meds_w[eti95L > 0]$eti95L, 1e5)
@@ -164,6 +168,50 @@ ggplot() +
   theme_bw() + theme(text=element_text(size=12))
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'global_INMBs_negative.png'),
        width=30,height=20,units="cm")
+
+
+## TABLES ##
+
+# n and % of countries with INMB > 0
+
+n_countries <- econ_inmb_meds_w %>% group_by(vacc_type, WHOREGION) %>% 
+  summarise(n_total = n())
+
+tab1 <- econ_inmb_meds_w %>% filter(median > 0) %>% group_by(vacc_type, WHOREGION) %>% 
+  summarise(n = n()) %>% right_join(n_countries, by = c('vacc_type', 'WHOREGION')) %>% 
+  mutate(n = case_when(is.na(n) ~ 0, T ~ n)) %>% 
+  mutate(percentage = round(100*n/n_total, 1))
+
+tab1_global <- tab1 %>% select(vacc_type, n, n_total) %>% 
+  group_by(vacc_type) %>% summarise(n = sum(n), n_total = sum(n_total)) %>% 
+  mutate(percentage = round(100*n/n_total, 1), WHOREGION = 'Global') %>% 
+  select(vacc_type, WHOREGION, n, n_total, percentage)
+
+tab1_save <- tab1 %>% rbind(tab1_global) %>%  
+  mutate(positive_INMB = paste0(percentage,'% (', n, '/', n_total, ')')) %>% 
+  select(WHOREGION, vacc_type, positive_INMB) %>% arrange(WHOREGION, vacc_type)
+
+write_csv(tab1_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'table1.csv'))
+
+# total sum regional INMBs
+
+regional_inmbs <- econ_inmb[WHO_regions, on='iso3c']
+regional_inmbs <- regional_inmbs[, c('WHOREGION','vacc_type','simulation_index','inmb')]
+
+global_inmbs <- regional_inmbs[, c('vacc_type','simulation_index','inmb')][, lapply(.SD, sum), by=c('vacc_type','simulation_index')]
+global_inmbs[, WHOREGION := 'Global']
+
+regional_inmbs <- regional_inmbs[, lapply(.SD, sum), by=c('WHOREGION','vacc_type','simulation_index')]
+regional_inmbs <- rbind(regional_inmbs, global_inmbs)
+regional_inmbs <- dt_to_meas(regional_inmbs, c('WHOREGION','vacc_type'))
+regional_inmbs_w <- dcast(regional_inmbs, WHOREGION + vacc_type ~ measure, value.var = 'inmb')
+regional_inmbs_w[, INMB_millions := paste0(round(median/1e6), ' (',
+                                           round(eti95L/1e6), ', ',
+                                           round(eti95U/1e6), ')')]
+
+tab2_save <- regional_inmbs_w[, c('WHOREGION','vacc_type','INMB_millions')]
+
+write_csv(tab2_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'table2.csv'))
 
 
 
