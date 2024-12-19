@@ -3,7 +3,21 @@
 options(scipen=1000000)
 
 scenario_name <- 'base'
-econ_folder_name <- ''
+econ_folder_name <- '' # change this if looking at a sensitivity analysis
+
+comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
+# no vaccination or current seasonal vaccines
+comparator_name <- case_when(
+  comparator == 'no_vacc' ~ 'no vaccination',
+  comparator == '0' ~ 'current seasonal vaccines'
+)
+
+if(!dir.exists(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator))){
+  dir.create(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator))
+}
+if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),comparator))){
+  dir.create(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),comparator))
+}
 
 ## LOAD DATA ##
 econ_cases_agg <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'econ_cases_agg.rds'))
@@ -20,15 +34,16 @@ setnames(doses_adding, 'vacc_scenario','vacc_type')
 doses_adding <- doses_adding[, lapply(.SD, sum), by = c('iso3c','simulation_index','vacc_type')]
 
 econ_nmb <- econ_add[doses_adding, on = c('iso3c','simulation_index','vacc_type')]
+if(comparator=='0'){econ_nmb <- econ_nmb[!vacc_type=='no_vacc']}
 
 econ_inmb <- econ_nmb[, c('vacc_type','iso3c','income_g','simulation_index','discounted_epi_costs','discounted_DALYs_cost','discounted_doses_cost')]
 
-base_econ <- econ_inmb[vacc_type=='0']
+base_econ <- econ_inmb[vacc_type==comparator]
 setnames(base_econ, 'discounted_epi_costs','discounted_epi_costs_base')
 setnames(base_econ, 'discounted_DALYs_cost','discounted_DALYs_cost_base')
 setnames(base_econ, 'discounted_doses_cost','discounted_doses_cost_base')
 base_econ[, vacc_type := NULL]
-econ_inmb <- econ_inmb[!vacc_type=='0']
+econ_inmb <- econ_inmb[!vacc_type==comparator]
 
 econ_inmb <- econ_inmb[base_econ, on=c('iso3c','income_g','simulation_index')]
 
@@ -46,13 +61,13 @@ ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) 
   geom_hline(yintercept=0, lty=2) +
   ylab('Incremental net monetary benefit ($2022, billions)') +
   ggtitle(paste0(scenario_name,econ_folder_name))
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_INMBs.png'),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_INMBs_',comparator,'.png')),
        width=30,height=20,units="cm")
 
 econ_nmb2 <- copy(econ_nmb)
 econ_nmb2[, total_cost := total_cost + total_hosp_cost]
 
-econ_nmb2_base <- econ_nmb2[vacc_type=='0']
+econ_nmb2_base <- econ_nmb2[vacc_type==comparator]
 setnames(econ_nmb2_base, 'total_DALYs','base_total_DALYs')
 setnames(econ_nmb2_base, 'total_cost','base_total_cost')
 econ_nmb2 <- econ_nmb2[econ_nmb2_base[,c('vacc_type','simulation_index','iso3c','income_g','base_total_DALYs','base_total_cost')], on = c('simulation_index','iso3c','income_g')]
@@ -61,20 +76,20 @@ econ_nmb2[, cost_saved := base_total_cost - total_cost]
 
 econ_nmb2 <- econ_nmb2[, c('vacc_type','iso3c','income_g','total_cost','DALYs_averted','cost_saved')]
 econ_nmb2[, names := countrycode(iso3c, destination='country.name',origin='iso3c')]
-ggplot(econ_nmb2[!vacc_type=='0' & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+ggplot(econ_nmb2[!vacc_type==comparator & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
   geom_point(aes(x=DALYs_averted/1e6, y=(-cost_saved)/1e9, col=vacc_type)) +
   facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
   scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
   xlab('DALYs averted (millions)') + ylab('Additional cost incurred ($2022, billions)') +
   ggtitle(paste0(scenario_name,econ_folder_name))
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_planes_point.png'),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_planes_point_',comparator,'.png')),
        width=30,height=20,units="cm")
 
 econ_nmb_meds <- dt_to_meas(econ_nmb2, c('vacc_type','iso3c','names','income_g'))
 econ_nmb_meds_w <- dcast(econ_nmb_meds,
                          vacc_type+iso3c+names+income_g~measure, 
                          value.var=c('cost_saved','DALYs_averted'))
-ggplot(econ_nmb_meds_w[!vacc_type == '0' & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+ggplot(econ_nmb_meds_w[!vacc_type == comparator & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
   geom_errorbar(aes(xmin=DALYs_averted_eti95L/1e6, xmax=DALYs_averted_eti95U/1e6,
                     y=(-cost_saved_median)/1e9, col=vacc_type),alpha=0.8) +
   geom_errorbar(aes(x=DALYs_averted_median/1e6, 
@@ -86,7 +101,7 @@ ggplot(econ_nmb_meds_w[!vacc_type == '0' & iso3c%in% c('GBR','USA','CUB','GHA','
   scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
   xlab('DALYs averted (millions)') + ylab('Additional cost incurred ($2022, billions)') +
   ggtitle(paste0(scenario_name,econ_folder_name))
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'example_planes.png'),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_planes_',comparator,'.png')),
        width=30,height=20,units="cm")
 
 econ_inmb_meds <- dt_to_meas(econ_inmb, c('vacc_type','iso3c','income_g','names'))
@@ -137,7 +152,7 @@ ggplot() +
   scale_x_log10(limits=c(200,110000), breaks=c(300,1000,3000,10000,30000,100000)) +
   facet_grid(vacc_type~., scales='fixed') +
   theme_bw() + theme(text=element_text(size=12))
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'global_INMBs.png'),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('global_INMBs_',comparator,'.png')),
        width=30,height=20,units="cm")
 
 zero_val <- min(-econ_inmb_meds_w[median < 0]$median, -econ_inmb_meds_w[eti95U < 0]$eti95L, 1e5)
@@ -166,7 +181,7 @@ ggplot() +
   scale_x_log10(limits=c(200,110000), breaks=c(300,1000,3000,10000,30000,100000)) +
   facet_grid(vacc_type~., scales='fixed') +
   theme_bw() + theme(text=element_text(size=12))
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),'global_INMBs_negative.png'),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('global_INMBs_negative_',comparator,'.png')),
        width=30,height=20,units="cm")
 
 
@@ -191,7 +206,7 @@ tab1_save <- tab1 %>% rbind(tab1_global) %>%
   mutate(positive_INMB = paste0(percentage,'% (', n, '/', n_total, ')')) %>% 
   select(WHOREGION, vacc_type, positive_INMB) %>% arrange(WHOREGION, vacc_type)
 
-write_csv(tab1_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'table1.csv'))
+write_csv(tab1_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table1_',comparator,'.csv')))
 
 # total sum regional INMBs
 
@@ -211,7 +226,36 @@ regional_inmbs_w[, INMB_millions := paste0(round(median/1e6), ' (',
 
 tab2_save <- regional_inmbs_w[, c('WHOREGION','vacc_type','INMB_millions')]
 
-write_csv(tab2_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'table2.csv'))
+write_csv(tab2_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table2_',comparator,'.csv')))
+
+# total sum regional INMBs **only in countries where median INMB > 0**
+
+include_dt <- econ_inmb_meds_w[median>0]
+include_dt <- arrange(include_dt, vacc_type, iso3c)
+
+regional_inmbs <- econ_inmb[WHO_regions, on='iso3c']
+for(vt in unique(regional_inmbs$vacc_type)){
+  regional_inmbs <- regional_inmbs[! iso3c %notin% include_dt[vacc_type==vt]$iso3c]
+}
+regional_inmbs <- regional_inmbs[, c('WHOREGION','vacc_type','simulation_index','inmb')]
+
+global_inmbs <- regional_inmbs[, c('vacc_type','simulation_index','inmb')][, lapply(.SD, sum), by=c('vacc_type','simulation_index')]
+global_inmbs[, WHOREGION := 'Global']
+
+regional_inmbs <- regional_inmbs[, lapply(.SD, sum), by=c('WHOREGION','vacc_type','simulation_index')]
+regional_inmbs <- rbind(regional_inmbs, global_inmbs)
+regional_inmbs <- dt_to_meas(regional_inmbs, c('WHOREGION','vacc_type'))
+regional_inmbs_w <- dcast(regional_inmbs, WHOREGION + vacc_type ~ measure, value.var = 'inmb')
+regional_inmbs_w[, INMB_millions := paste0(round(median/1e6), ' (',
+                                           round(eti95L/1e6), ', ',
+                                           round(eti95U/1e6), ')')]
+
+tab3_save <- regional_inmbs_w[, c('WHOREGION','vacc_type','INMB_millions')]
+
+write_csv(tab3_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table3_',comparator,'.csv')))
+
+write_csv(include_dt, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table4_',comparator,'.csv')))
+
 
 
 

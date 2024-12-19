@@ -24,7 +24,7 @@ ageing_month <<- as.numeric(substr(ageing_date, 4, 5))
 
 if(vacc_coverage == 'NO'){
   vacc_type_list <<- list(vacc_type_list[[1]])
-  names(vacc_type_list) <<- '0'
+  names(vacc_type_list) <<- 'no_vacc'
   vacc_type_list[[1]]$VE <<- c(0,0,0,0)
 }
 

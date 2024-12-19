@@ -77,6 +77,12 @@ doses <- doses[country_specs[, c('iso3c','country_type')], on='iso3c']
 doses <- doses[prices[, c('vacc_type','country_type',..price_used)], on=c('vacc_type','country_type')]
 setnames(doses, paste0(price_used), 'price')
 
+if('no_vacc' %in% unique(infs_out$vacc_type)){
+  doses_no_vacc <- doses[vacc_scenario=='0']
+  doses_no_vacc[, doses := 0][,vacc_scenario := 'no_vacc']
+  doses <- rbind(doses, doses_no_vacc)
+}
+
 setorder(doses, iso3c, vacc_scenario, year)
 
 doses[, doses_cost := doses*price]

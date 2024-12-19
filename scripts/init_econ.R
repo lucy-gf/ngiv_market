@@ -50,14 +50,11 @@ vacc_calendar_weeks <- 12
 
 vaccine_variable <- c('doses','coverage')[1] 
 
-#### load vaccine types ####
-source(here::here('next_gen_flu','vacc_types.R'))
-
 #### load MMGH data, merge subpopulations into model age groups ####
 source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 
 #### produce shrunk datasets ####
-source(here::here('scripts','econ','shrink_epi_data.R'))
+# source(here::here('scripts','econ','shrink_epi_data.R'))
 
 ### run first econ analysis ####
 source(here::here('scripts','econ','national_health_econ_1.R'))
