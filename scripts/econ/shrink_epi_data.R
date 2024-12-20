@@ -43,7 +43,7 @@ for(itz in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')){
     print(paste0(itz, '_novacc exists'))
     infs_out <- readRDS(paste0('output/data/epi/rds_output',paste0(ifelse(nosync, '/no-sync.nosync','')),'/vacc_',itz,'_novacc.rds'))
     print(nrow(infs_out)/(1*100*length(unique(infs_out$time))))
-    infs_out[, vacc_type := 'no_vacc']
+    infs_out[, vacc_type := 'no_vacc'] 
     infs_out[, tot := I1 + I2 + I3 + I4]
     isos_na <- infs_out %>% group_by(iso3c) %>% summarise(sum = sum(tot)) %>% filter(is.na(sum)) %>% select(iso3c)
     if(nrow(isos_na)>0){print(isos_na$iso3c)}
@@ -60,10 +60,4 @@ for(itz in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')){
   }
 }
 
-print(paste0(length(unique(total_epi$iso3c)), ' countries, ', round(100*length(unique(total_epi$iso3c))/178, 2), '% of global'))
-
-write_rds(total_epi, here::here('output','data','epi','rds_output','vacc_global.rds'))
-
-
-
-
+print(paste0(length(unique(total_epi

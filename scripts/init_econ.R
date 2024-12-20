@@ -56,13 +56,17 @@ source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 #### produce shrunk datasets ####
 # source(here::here('scripts','econ','shrink_epi_data.R'))
 
-### run first econ analysis ####
+#### run first econ analysis ####
 source(here::here('scripts','econ','national_health_econ_1.R'))
 
-### plot outputs ####
+#### make national INMB data.tables ####
+source(here::here('scripts','econ','INMB_outputs.R'))
+
+#### plot outputs ####
 source(here::here('scripts','econ','INMB_plots.R'))
 
-
+#### make tables (has to come after plots) ####
+source(here::here('scripts','econ','INMB_tables.R'))
 
 
 
