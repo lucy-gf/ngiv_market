@@ -60,4 +60,10 @@ for(itz in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')){
   }
 }
 
-print(paste0(length(unique(total_epi
+print(paste0(length(unique(total_epi$iso3c)), ' countries, ', round(100*length(unique(total_epi$iso3c))/178, 2), '% of global'))
+
+write_rds(total_epi, here::here('output','data','epi','rds_output','vacc_global.rds'))
+
+
+
+
