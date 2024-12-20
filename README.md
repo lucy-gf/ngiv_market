@@ -28,7 +28,7 @@ To run econ analysis, use `scripts/init_econ.R`.
 ## Economic analysis
 
 1. `shrink_epi_data.R` makes the epidemic outputs into the level of detail needed (e.g. years not weeks), for smaller files. Can skip this step if you have access to `vacc_global.rds` already
-2. `/making_econ_data/' contains code for calculating/sampling economic parameters (mainly fixed to increase comparability)
+2. `/making_econ_data/` contains code for calculating/sampling economic parameters (mainly fixed to increase comparability)
 2. `national_health_econ_1.R` turns age-, year-, and country-specific infections into DALYs and costs
 3. `INMB_outputs.R` turns the DALYs, costs, and annual doses into net monetary benefit, INMB, etc.
 4. `INMB_plots.R`, `INMB_tables.R` turn these into figures and tables
