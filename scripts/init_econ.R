@@ -55,8 +55,9 @@ source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 
 #### produce shrunk datasets ####
 # source(here::here('scripts','econ','shrink_epi_data.R'))
+## alternatively load 'vacc_global.rds' from OneDrive to skip this step
 
-#### run first econ analysis ####
+#### produce national outputs ####
 source(here::here('scripts','econ','national_health_econ_1.R'))
 
 #### make national INMB data.tables ####
@@ -65,7 +66,7 @@ source(here::here('scripts','econ','INMB_outputs.R'))
 #### plot outputs ####
 source(here::here('scripts','econ','INMB_plots.R'))
 
-#### make tables (has to come after plots) ####
+#### make tables outputs ####
 source(here::here('scripts','econ','INMB_tables.R'))
 
 

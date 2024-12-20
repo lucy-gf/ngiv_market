@@ -11,7 +11,7 @@ select <- dplyr::select
 
 price_used <- c('midpoint','lower','upper')[1]
 
-# sensitivity analyses
+# sensitivity analyses 
 outp_include <- F # including outpatient/non-hospitalisation visits T/F
 disease_modification <- F; mod_val <- 0.5
 WTP_choice <- c('lancet','gdp')[1]; WTP_GDP_ratio <- 1 # proportion of GDP per capita for the willingness_to_pay threshold
@@ -67,14 +67,14 @@ country_specs[, country_type := case_when(
 )]
 
 doses <- demand_input[, c('iso3c','WHO_region','income_g','vacc_scenario','year','doses','vacc_used')]
-doses[, doses := ceiling(doses)*(1+wastage)] # inflating for wastage (extra purchasing)
+doses[, doses := ceiling(doses*(1+wastage))] # inflating for wastage (extra purchasing)
 doses <- doses[iso3c %in% infs_out$iso3c]
 doses <- doses[, lapply(.SD, sum), by = c('iso3c','WHO_region','income_g','vacc_scenario','vacc_used','year')]
-doses[, vacc_type := substr(vacc_used,1,1)]
+doses[, vacc_type := substr(vacc_used,1,1)] # to match to MMGH pricing assumptions
 
-doses <- doses[country_specs[, c('iso3c','country_type')], on='iso3c']
+doses <- doses[country_specs[, c('iso3c','country_type')], on='iso3c'] # adding procurement mechanisms etc.
 
-doses <- doses[prices[, c('vacc_type','country_type',..price_used)], on=c('vacc_type','country_type')]
+doses <- doses[prices[, c('vacc_type','country_type',..price_used)], on=c('vacc_type','country_type')] # adding MMGH prices
 setnames(doses, paste0(price_used), 'price')
 
 if('no_vacc' %in% unique(infs_out$vacc_type)){
@@ -85,13 +85,15 @@ if('no_vacc' %in% unique(infs_out$vacc_type)){
 
 setorder(doses, iso3c, vacc_scenario, year)
 
+# cost of dose purchasing
 doses[, doses_cost := doses*price]
 length_dt <- nrow(doses)
 
+# making into 100 identical simualtions, as delivery costs will differ across simulations
 doses <- rbindlist(replicate(n = 100, expr = doses, simplify = FALSE))
 doses$simulation_index <- rep(1:100, each = length_dt)
 
-# costs of doses
+# costs of delivery
 delivery_cost_samples <- data.table(read_csv(here::here('data','econ','delivery_cost_samples.csv'), show_col_types=F))
 delivery_cost_samples <- delivery_cost_samples[iso3c %in% unique(doses$iso3c)]
 doses <- doses[delivery_cost_samples, on=c('iso3c','simulation_index')]
@@ -260,6 +262,7 @@ econ_cases_agg[, discounted_DALYs_cost := cost_of_DALYs*DALY_discount_rate]
 
 econ_cases_agg[, c('discount_year','cost_discount_rate','DALY_discount_rate'):=NULL]
 
+# save data
 write_rds(econ_cases_agg, here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'econ_cases_agg.rds'))
 write_rds(doses, here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'doses.rds'))
 

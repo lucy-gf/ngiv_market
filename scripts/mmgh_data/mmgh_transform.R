@@ -106,6 +106,7 @@ demand_input[year >= intro_year, vacc_used := vacc_scenario]
 
 demand_input <- demand_input %>% arrange(vacc_scenario,country,year,model_age_group) %>% filter(year >= start_year_of_analysis)
 
+# save data
 write_csv(demand_input, here::here('data','MMGH','demand_input.csv'))
 
 # ####################################

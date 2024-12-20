@@ -1,5 +1,8 @@
 #### Epidemic simulations ####
 
+### if using vaccines, will only take one ITZ input at a time,
+### if using no_vacc, will be parallelised over all ITZs
+
 fcn_parallel_itz <- function(itz_input){
   
 # using:
@@ -13,15 +16,18 @@ if(vaccine_variable == 'coverage'){
 ## set up next_gen_flu code
 source(here::here('next_gen_flu','flu_parallel.R'))
 
+# set hemisphere and countries in ITZ
 hemisphere_input <<- demand_input[cluster_code==itz_input]$hemisphere[1]
 isos <<- unique(demand_input[cluster_code==itz_input]$iso3c)
 
+# get epidemics 
 sampled_epids <<- data.table(read_csv(here::here('data','epi','sampled_epids',paste0('sampled_epidemics_30_100_',itz_input,'_wr0.csv')), show_col_types=F))
 epids <<- sampled_epids[simulation_cal_year <= years_of_analysis & simulation_index <= simulations]
 ageing_date <<- ifelse(hemisphere_input=='NH', key_dates[1], key_dates[2])
 ageing_day <<- as.numeric(substr(ageing_date, 1, 2))
 ageing_month <<- as.numeric(substr(ageing_date, 4, 5))
 
+# if using no_vacc, manually make vacc_type_list
 if(vacc_coverage == 'NO'){
   vacc_type_list <<- list(vacc_type_list[[1]])
   names(vacc_type_list) <<- 'no_vacc'
@@ -30,6 +36,7 @@ if(vacc_coverage == 'NO'){
 
 infs_out <<- data.table()
 
+# run in a loop over all countries in ITZ
 for(iso3c_input in isos){
   
   itz_input <<- itz_input
@@ -56,6 +63,7 @@ for(iso3c_input in isos){
     vec
   }
   
+  # set up epidemic datatable for running simulations (e.g. add matching, epidemic start dates, initial infected)
   epid_dt <<- epids %>% select(simulation_index, sus, trans, contains('match'), strain, day, month, year, simulation_cal_year,
                               pushback, init_ageing_date, init_nye, r0) %>% 
     rename(susceptibility=sus, transmissibility=trans, r0_to_scale=r0) %>% mutate(strain = substr(strain,5,5)) 
@@ -90,9 +98,10 @@ for(iso3c_input in isos){
   infs_dt[, iso3c := iso3c_input]
   
   if(nrow(infs_dt[!complete.cases(infs_dt)]) > 0){
-    print('NA values found')
+    print('NA values found') # shouldn't happen
   }
   
+  # merge outputs
   if(nrow(infs_out)==0){
     infs_out <- infs_dt
   }else{

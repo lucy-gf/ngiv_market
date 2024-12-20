@@ -30,9 +30,9 @@ start_year_of_analysis <- 2025
 years_of_analysis <- 26
 
 simulations <- 100
-ageing <- T
+ageing <- T # are the populations being aged in the simulations?
 key_dates <- c('01-04', '01-10') # vaccination and ageing dates (hemisphere-dependent)
-vacc_calendar_weeks <- 12
+vacc_calendar_weeks <- 12 # number of weeks in vaccination program
 
 vaccine_variable <- c('doses','coverage')[1] # using MMGH doses or % coverage?
 # currently only set up for doses 
@@ -52,6 +52,9 @@ source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 source(here::here('scripts','epidemics','epid_simulations.R'))
 
 #### run epidemics ####
+## (if using vaccines, will parallelise over vaccine types,
+## if not using vaccines, will parallelise over ITZs)
+
 if(vacc_coverage=='NO'){
   mclapply(c('ARG','AUS','CAN','CHN','GBR','GHA','TUR'), fcn_parallel_itz, mc.cores=7)
 }else{

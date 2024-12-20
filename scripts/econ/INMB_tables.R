@@ -1,5 +1,5 @@
 
-### ECON PLOTS AND TABLES ###
+### ECON TABLES ###
 options(scipen=1000000)
 
 scenario_name <- 'base'
@@ -42,7 +42,7 @@ tab1_save <- tab1 %>% rbind(tab1_global) %>%
 
 write_csv(tab1_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table1_',comparator,'.csv')))
 
-# total sum regional INMBs
+# total sum of regional and global INMBs
 
 regional_inmbs <- econ_inmb[WHO_regions, on='iso3c']
 regional_inmbs <- regional_inmbs[, c('WHOREGION','vacc_type','simulation_index','inmb')]
@@ -88,6 +88,7 @@ tab3_save <- regional_inmbs_w[, c('WHOREGION','vacc_type','INMB_millions')]
 
 write_csv(tab3_save, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table3_',comparator,'.csv')))
 
+# also save *which* countries/vaccine types have INMB > 0
 write_csv(include_dt, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table4_',comparator,'.csv')))
 
 

@@ -1,3 +1,5 @@
+#### IGNORE ####
+
 ## troubleshooting ##
 source(here::here('scripts','setup','packages.R'))
 source(here::here('next_gen_flu','functions','demography.R'))

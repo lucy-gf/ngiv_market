@@ -1,5 +1,5 @@
 
-### ECON PLOTS AND TABLES ###
+### ECON PLOTS ###
 options(scipen=1000000)
 
 scenario_name <- 'base'
@@ -19,11 +19,13 @@ if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_fold
   dir.create(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),comparator))
 }
 
+# read in data that was made in INMB_outputs.R
 econ_inmb <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_inmb.rds'))
 econ_nmb2 <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_nmb2.rds'))
 econ_nmb_meds_w <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_nmb_meds_w.rds'))
 econ_inmb_meds_w <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_inmb_meds_w.rds'))
 
+# boxplot of INMBs for each vaccine type in select countries
 ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
   geom_boxplot(aes(x=vacc_type, y=inmb/1e9, fill=vacc_type)) + 
   facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
@@ -35,6 +37,7 @@ ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_INMBs_',comparator,'.png')),
        width=30,height=20,units="cm")
 
+# incremental cost-benefit plane in select countries - scatter
 ggplot(econ_nmb2[!vacc_type==comparator & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
   geom_point(aes(x=DALYs_averted/1e6, y=(-cost_saved)/1e9, col=vacc_type)) +
   facet_wrap(names~., scales='free',nrow=2) + theme_bw() +
@@ -44,6 +47,7 @@ ggplot(econ_nmb2[!vacc_type==comparator & iso3c%in% c('GBR','USA','CUB','GHA','C
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_planes_point_',comparator,'.png')),
        width=30,height=20,units="cm")
 
+# incremental cost-benefit plane in select countries - intervals
 ggplot(econ_nmb_meds_w[!vacc_type == comparator & iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
   geom_errorbar(aes(xmin=DALYs_averted_eti95L/1e6, xmax=DALYs_averted_eti95U/1e6,
                     y=(-cost_saved_median)/1e9, col=vacc_type),alpha=0.8) +
@@ -72,6 +76,7 @@ ggplot(econ_inmb_meds_w) +
 
 zero_val <- min(econ_inmb_meds_w[median > 0]$median, econ_inmb_meds_w[eti95L > 0]$eti95L, 1e5)
 
+# plot INMBs wrt GDP per capita on a log-log scale, cutting off any countries where INMB < 0
 ggplot() +
   geom_hline(yintercept = zero_val/1e6, lty=2) + 
   geom_segment(data = econ_inmb_meds_w[eti95L>zero_val],
@@ -101,6 +106,7 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 
 zero_val <- min(-econ_inmb_meds_w[median < 0]$median, -econ_inmb_meds_w[eti95U < 0]$eti95L, 1e5)
 
+# doing the same but for *negative* INMBs, flipping the axes
 ggplot() +
   geom_hline(yintercept = zero_val/1e6, lty=2) + 
   geom_segment(data = econ_inmb_meds_w[eti95U < -zero_val],
