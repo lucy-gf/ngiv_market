@@ -1,4 +1,4 @@
-# Global market surplus of next-generation influenza vaccines
+# Global impact of next-generation influenza vaccines
 
 For use:
 
