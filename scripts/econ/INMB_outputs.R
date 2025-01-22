@@ -18,6 +18,9 @@ if(!dir.exists(here::here('output','figures','econ',paste0(scenario_name, econ_f
 if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),comparator))){
   dir.create(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),comparator))
 }
+if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'outputs'))){
+  dir.create(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'outputs'))
+}
 
 ## LOAD DATA (from national_health_econ_1.R) ##
 econ_cases_agg <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name),'econ_cases_agg.rds'))
