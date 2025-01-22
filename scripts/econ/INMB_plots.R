@@ -2,7 +2,7 @@
 ### ECON PLOTS ###
 options(scipen=1000000)
 
-scenario_name <- 'base'
+scenario_name <- 'base_doseprice_lower'
 econ_folder_name <- '' # change this if looking at a sensitivity analysis
 
 comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
@@ -24,6 +24,7 @@ econ_inmb <- read_rds(here::here('output','data','econ',paste0(scenario_name,eco
 econ_nmb2 <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_nmb2.rds'))
 econ_nmb_meds_w <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_nmb_meds_w.rds'))
 econ_inmb_meds_w <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_inmb_meds_w.rds'))
+threshold_prices <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs',paste0('threshold_prices_',comparator,'.rds')))
 
 # boxplot of INMBs for each vaccine type in select countries
 ggplot(econ_inmb[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
@@ -134,15 +135,159 @@ ggplot() +
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('global_INMBs_negative_',comparator,'.png')),
        width=30,height=20,units="cm")
 
+#NNV for no-vacc scenarios only
+if(comparator=='no_vacc'){
+  
+  nnv_tot <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','nnv_tot.rds'))
+  global_nnv <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','global_nnv.rds'))
+  
+  # plot global nnv
+  ggplot() +
+    geom_point(data=global_nnv,
+               aes(x=vacc_type, y=nnv_inf, col=as.factor(vacc_type)),
+               position=position_jitterdodge(dodge.width=0.9,jitter.width=2.5), shape=4, alpha=0.7) +
+    theme_bw() + ylab('Number needed to vaccinate') +
+    scale_color_manual(values=vtn_colors) +
+    labs(col = 'Vaccine type') +
+    scale_y_log10(breaks=c(0.1,0.3,1,3,10), labels=c(0.1,0.3,1,3,10), limits=c(0.08,10)) +
+    xlab('Vaccine type') +
+    theme(text=element_text(size=14),
+          legend.position='none')
+  
+  ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('global_nnv_inf_',comparator,'.png')),
+         width=30,height=20,units="cm")
+  
+  # nnv by WHO region
+  ggplot() +
+    geom_boxplot(data=nnv_tot[!vacc_type=="0",],
+                 aes(x=country, y=nnv_inf, col=as.factor(vacc_type)),
+                 shape=4, alpha=0.7, outliers=FALSE) +
+    theme_bw() + ylab('Number needed to vaccinate') +
+    scale_color_manual(values=vtn_colors) +
+    labs(col = 'Vaccine type') +
+    scale_y_log10(breaks=c(0.1,0.3,1,3,10,30), labels=c(0.1,0.3,1,3,10,30), limits=c(0.08,300)) +
+    xlab('Country') +
+    facet_grid(vacc_type~WHOREGION, scales = "free_x") +
+    theme(text=element_text(size=14),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())
+  
+  ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_nnv_inf_',comparator,'.png')),
+         width=30,height=20,units="cm")
+}
 
+## THRESHOLD PRICES
 
+# boxplot of threshold prices for each vaccine type in select countries
+ggplot(threshold_prices[iso3c%in% c('GBR','USA','CUB','GHA','CHL','SVN','DEU','ARG')]) + 
+  geom_boxplot(aes(x=vacc_type, y=threshold_price, fill=vacc_type)) + 
+  facet_wrap(country~., scales='free',nrow=2) + theme_bw() +
+  scale_fill_manual(values = vtn_colors) + xlab('') +
+  labs(fill='Vaccine type') +
+  geom_hline(yintercept=0, lty=2) +
+  ylab('Threshold Price ($2022)') +
+  ggtitle(paste0(scenario_name,econ_folder_name))
 
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('example_Threshhold_Price_',comparator,'.png')),
+       width=30,height=20,units="cm")
 
+# plot vaccine threshold price by country
+S_sqrt <- function(x){sign(x)*sqrt(abs(x))}
+IS_sqrt <- function(x){x^2*sign(x)}
+S_sqrt_trans <- function() trans_new("S_sqrt",S_sqrt,IS_sqrt)
 
+ggplot() +
+  geom_boxplot(data=threshold_prices[!vacc_type=="0",],
+               aes(x=country, y=threshold_price, col=as.factor(vacc_type)),
+               shape=4, alpha=0.7, outliers=FALSE) +
+  theme_bw() + ylab('Threshold Price (USD)') +
+  scale_color_manual(values=vtn_colors) +
+  labs(col = 'Vaccine type') +
+  scale_y_continuous(trans="S_sqrt",breaks=c(-100,-10,0,10,100,500), labels=c(-100,-10,0,10,100,500), limits=c(-100,750)) +
+  # scale_y_log10(breaks=c(0.1,0.3,1,3,10,30), labels=c(0.1,0.3,1,3,10,30), limits=c(0.08,300)) +
+  xlab('Country') +
+  facet_grid(vacc_type~WHOREGION, scales = "free_x") +
+  theme(text=element_text(size=14),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_threshold_price',comparator,'.png')),
+       width=30,height=20,units="cm")
 
+# plot vaccine threshold price by region
+S_sqrt <- function(x){sign(x)*sqrt(abs(x))}
+IS_sqrt <- function(x){x^2*sign(x)}
+S_sqrt_trans <- function() trans_new("S_sqrt",S_sqrt,IS_sqrt)
 
+ggplot() +
+  geom_boxplot(data=threshold_prices[!vacc_type=="0",],
+               aes(x=country, y=threshold_price, group = WHOREGION, col=as.factor(vacc_type)),
+               shape=4, alpha=0.7, outliers=FALSE) +
+  theme_bw() + ylab('Threshold Price (USD)') +
+  scale_color_manual(values=vtn_colors) +
+  labs(col = 'Vaccine type') +
+  scale_y_continuous(trans="S_sqrt",breaks=c(-100,-10,0,10,100,500), labels=c(-100,-10,0,10,100,500), limits=c(-100,750)) +
+  # scale_y_log10(breaks=c(0.1,0.3,1,3,10,30), labels=c(0.1,0.3,1,3,10,30), limits=c(0.08,300)) +
+  xlab('Country') +
+  facet_grid(vacc_type~., scales = "free_x") +
+  theme(text=element_text(size=14),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_threshold_price',comparator,'.png')),
+       width=30,height=20,units="cm")
 
+# alternative presentation
+ggplot(data=threshold_prices[!vacc_type=="0",]) +
+  geom_boxplot(aes(x=country, y=threshold_price,
+                   fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+  # geom_boxplot(aes(x=country, y=threshold_price, group=interaction(country,vacc_type)), fill = NA, outliers=F) +
+  # geom_jitter(aes(x=ct_n, y=threshold_price), alpha = 0.3) +
+  ylab('Threshold price (USD)') +
+  scale_fill_manual(values=vtn_colors#,
+                    # labels = c('Current','Improved (minimal)',
+                    #            'Improved (efficacy)','Improved (breadth)','Universal')
+                    ) +
+  scale_color_manual(values=vtn_colors#,
+                     # labels = c('Current','Improved (minimal)',
+                     #            'Improved (efficacy)','Improved (breadth)','Universal')
+                     ) +
+  labs(fill = 'Vaccine type', color = 'Vaccine type') +
+  # ylim(c(0,NA)) +
+  facet_wrap(WHOREGION~., scales='free', nrow=3, labeller = labeller(WHOREGION=who_region_labs)) +
+  theme_bw() + xlab('Country') +
+  theme(text=element_text(size=14), 
+        legend.position='none',
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region2_threshold_price',comparator,'.png')),
+       width=30,height=20,units="cm")
+
+#grouped across region
+ggplot(data=threshold_prices[!vacc_type=="0",]) +
+  geom_boxplot(aes(x=vacc_type, y=threshold_price,
+                   fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+  geom_boxplot(aes(x=country, y=threshold_price, fill = NA), outliers=F) +
+  # geom_jitter(aes(x=ct_n, y=threshold_price), alpha = 0.3) +
+  ylab('Threshold price (USD)') +
+  scale_fill_manual(values=vtn_colors#,
+                    # labels = c('Current','Improved (minimal)',
+                    #            'Improved (efficacy)','Improved (breadth)','Universal')
+  ) +
+  scale_color_manual(values=vtn_colors#,
+                     # labels = c('Current','Improved (minimal)',
+                     #            'Improved (efficacy)','Improved (breadth)','Universal')
+  ) +
+  labs(fill = 'Vaccine type', color = 'Vaccine type') +
+  # ylim(c(0,NA)) +
+  facet_wrap(WHOREGION~., scales='free', nrow=1) +
+  theme_bw() + xlab('Country') +
+  theme(text=element_text(size=14), 
+        legend.position='none',
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+# ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region2_threshold_price',comparator,'.png')),
+#        width=30,height=20,units="cm")
 
