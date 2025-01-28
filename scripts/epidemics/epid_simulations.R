@@ -113,7 +113,9 @@ for(iso3c_input in isos){
 
 #### SAVE OUTPUTS ####
 
-saveRDS(infs_out, file = here::here('output','data','epi','rds_output',paste0('vacc_',itz_input,ifelse(vacc_coverage=='NO','_novacc',''),'.rds')))
+saveRDS(infs_out, file = here::here('output','data','epi','rds_output',paste0('vacc_',itz_input,
+                                                                              ifelse(vacc_coverage=='NO','_novacc',''),
+                                                                              ifelse(same_cov_SA=='ON','_same_cov_SA',''),'.rds')))
 
 }
 

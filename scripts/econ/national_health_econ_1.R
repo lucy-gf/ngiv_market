@@ -9,7 +9,7 @@
 
 select <- dplyr::select
 
-price_used <- c('midpoint','lower','upper')[1]
+price_used <- c('midpoint','lower','upper')[2]
 
 # sensitivity analyses 
 outp_include <- F # including outpatient/non-hospitalisation visits T/F

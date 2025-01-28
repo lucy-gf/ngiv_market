@@ -3,7 +3,7 @@
 options(scipen=1000000)
 
 scenario_name <- 'base'
-econ_folder_name <- '' # change this if looking at a sensitivity analysis
+econ_folder_name <- '_doseprice_lower' # change this if looking at a sensitivity analysis
 
 comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
 # no vaccination or current seasonal vaccines
