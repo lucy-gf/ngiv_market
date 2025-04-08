@@ -67,9 +67,12 @@ write_csv(tab2_save, here::here('output','data','econ',paste0(scenario_name, eco
 include_dt <- econ_inmb_meds_w[median>0]
 include_dt <- arrange(include_dt, vacc_type, iso3c)
 
-regional_inmbs <- econ_inmb[WHO_regions, on='iso3c']
-for(vt in unique(regional_inmbs$vacc_type)){
-  regional_inmbs <- regional_inmbs[! iso3c %notin% include_dt[vacc_type==vt]$iso3c]
+regional_inmbs2 <- econ_inmb[WHO_regions, on='iso3c']
+regional_inmbs <- data.table()
+for(vt in unique(regional_inmbs2$vacc_type)){
+  regional_inmbs <- rbind(regional_inmbs,
+                          regional_inmbs2[vacc_type == vt &
+                                            iso3c %in% include_dt[vacc_type==vt]$iso3c])
 }
 regional_inmbs <- regional_inmbs[, c('WHOREGION','vacc_type','simulation_index','inmb')]
 
@@ -90,9 +93,6 @@ write_csv(tab3_save, here::here('output','data','econ',paste0(scenario_name, eco
 
 # also save *which* countries/vaccine types have INMB > 0
 write_csv(include_dt, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table4_',comparator,'.csv')))
-
-
-
 
 
 

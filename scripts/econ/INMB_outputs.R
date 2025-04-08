@@ -3,9 +3,9 @@
 options(scipen=1000000)
 
 scenario_name <- 'base'
-econ_folder_name <- '' # change this if looking at a sensitivity analysis
+econ_folder_name <- '_doseprice_lower' # change this if looking at a sensitivity analysis
 
-comparator <- c('no_vacc','0')[1] # which vaccine scenario is the comparator?
+comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
 # no vaccination or current seasonal vaccines
 comparator_name <- case_when(
   comparator == 'no_vacc' ~ 'no vaccination',
@@ -180,17 +180,17 @@ threshold_prices_base[, discounted_delivery_cost_tot := NULL]
 threshold_prices_base[, vacc_type := NULL]
 threshold_prices_base[, vacc_used := NULL]
 
-# if against no_vacc, remove years where countries haven't yet introduced NGIVs
-if(comparator == 'no_vacc'){
-  threshold_prices[, combo := paste0(iso3c,'_',year)]
-  threshold_prices_base[, combo := paste0(iso3c,'_',year)]
+# remove years where countries haven't yet introduced NGIVs
+
+threshold_prices[, combo := paste0(iso3c,'_',year)]
+threshold_prices_base[, combo := paste0(iso3c,'_',year)]
   
-  threshold_prices <- threshold_prices[vacc_type == vacc_used]
-  threshold_prices_base <- threshold_prices_base[combo %in% threshold_prices$combo]
+threshold_prices <- threshold_prices[vacc_type == vacc_used]  
+threshold_prices_base <- threshold_prices_base[combo %in% threshold_prices$combo]
   
-  threshold_prices[,combo := NULL]
-  threshold_prices_base[,combo := NULL]
-}
+threshold_prices[,combo := NULL]
+threshold_prices_base[,combo := NULL]
+
 
 threshold_prices <- threshold_prices[threshold_prices_base, on=c('iso3c','simulation_index','year')]
 threshold_prices[, vacc_used := NULL]

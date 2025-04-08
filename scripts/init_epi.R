@@ -37,7 +37,11 @@ vacc_calendar_weeks <- 12 # number of weeks in vaccination program
 vaccine_variable <- c('doses','coverage')[1] # using MMGH doses or % coverage?
 # currently only set up for doses 
 
-vacc_coverage <- c('YES','NO')[2] # switch 'no vaccination' simulations off/on
+vacc_coverage <- c('YES','NO')[1] # switch 'no vaccination' simulations off/on,
+# needs to be 'YES' to have vaccinations, including NGIVs
+
+same_cov_SA <- c('OFF','ON')[1] # should NGIVs use the exact coverage of current vaccines?
+# typically no
 
 ################################################
 ################################################
@@ -58,7 +62,7 @@ source(here::here('scripts','epidemics','epid_simulations.R'))
 if(vacc_coverage=='NO'){
   mclapply(c('ARG','AUS','CAN','CHN','GBR','GHA','TUR'), fcn_parallel_itz, mc.cores=7)
 }else{
-  for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[1:7]){
+  for(itz_input in c('ARG','AUS','CAN','CHN','GBR','GHA','TUR')[6]){
     fcn_parallel_itz(itz_input)
   }
 }
