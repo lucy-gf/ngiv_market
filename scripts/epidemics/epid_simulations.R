@@ -14,7 +14,7 @@ if(vaccine_variable == 'coverage'){
 } 
 
 ## set up next_gen_flu code
-source(here::here('next_gen_flu','flu_parallel.R'))
+source(here::here('next_gen_flu','functions','flu_parallel.R'))
 
 # set hemisphere and countries in ITZ
 hemisphere_input <<- demand_input[cluster_code==itz_input]$hemisphere[1]

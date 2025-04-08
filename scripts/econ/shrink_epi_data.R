@@ -1,6 +1,6 @@
 #### Condensing epi data ####
 
-nosync <- T
+nosync <- F
 
 # loading MMGH data
 intro_years <- data.table(read_csv(here::here('data','MMGH','intro_years.csv'), show_col_types = F))

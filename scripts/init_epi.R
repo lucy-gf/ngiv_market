@@ -48,7 +48,7 @@ same_cov_SA <- c('OFF','ON')[1] # should NGIVs use the exact coverage of current
 ################################################
 
 #### load vaccine types ####
-source(here::here('next_gen_flu','vacc_types.R'))
+source(here::here('next_gen_flu', 'functions','vacc_types.R'))
 
 #### load MMGH data, merge subpopulations into model age groups ####
 source(here::here('scripts','mmgh_data','mmgh_transform.R'))
