@@ -85,6 +85,26 @@ if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_fold
 supp.labs.sa <- c('Base','DALYs 0% discounted','WTP 0.3 x GDPpc', 'WTP 1 x GDPpc')
 names(supp.labs.sa) <- c('base','discount0','gdp0.3', 'gdp1')
 
+# # boxplot of median threshold prices by region
+# ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
+#   geom_boxplot(aes(x=vacc_type, y=mean, fill=as.factor(vacc_type), col=as.factor(vacc_type)), outliers = T) +
+#   geom_boxplot(aes(x=vacc_type, y=mean), alpha=0, outliers=F) +
+#   ylab('Threshold price (USD)') +
+#   scale_fill_manual(values=vtn_colors) +
+#   scale_color_manual(values=vtn_colors) +
+#   labs(fill = 'Vaccine type', color = 'Vaccine type') +
+#   facet_grid(SA~WHOREGION, scales='free', labeller = labeller(WHOREGION = who_region_labs,
+#                                                               SA = supp.labs.sa)) +
+#   theme_bw() + xlab('Vaccine type') +
+#   theme(text=element_text(size=12), 
+#         legend.position='none'#,
+#         # axis.text.x=element_blank(),
+#         # axis.ticks.x=element_blank()
+#   )
+# 
+# ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'.png')),
+#        width=30,height=35,units="cm")
+
 # boxplot of median threshold prices by region
 ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
   geom_boxplot(aes(x=vacc_type, y=mean, fill=as.factor(vacc_type), col=as.factor(vacc_type)), outliers = T) +
@@ -93,14 +113,14 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
-  facet_grid(SA~WHOREGION, scales='free', labeller = labeller(WHOREGION = who_region_labs,
-                                                              SA = supp.labs.sa)) +
+  facet_grid(WHOREGION~SA, scales='fixed', labeller = labeller(WHOREGION = who_region_labs,
+                                                               SA = supp.labs.sa)) +
   theme_bw() + xlab('Vaccine type') +
   theme(text=element_text(size=12), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, 0, 10, 30, 100, 300, 1000, 3000)) 
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'.png')),
        width=30,height=35,units="cm")
@@ -113,16 +133,16 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
-  facet_grid(WHOREGION~SA, scales='free', labeller = labeller(WHOREGION = who_region_labs,
+  facet_grid(WHOREGION~SA, scales='fixed', labeller = labeller(WHOREGION = who_region_labs,
                                                                SA = supp.labs.sa)) +
   theme_bw() + xlab('Vaccine type') +
   theme(text=element_text(size=12), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, 0, 10, 30, 100, 300, 1000, 3000)) 
 
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'_opp_facet.png')),
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'_free.png')),
        width=30,height=35,units="cm")
 
 
@@ -190,11 +210,15 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 upper_inmbs[, INMB_mill_num := as.numeric(word(INMB_millions, 1))]
 lower_inmbs[, INMB_mill_num := as.numeric(word(INMB_millions, 1))]
 
+colorscale <- c('royalblue4', 'lightblue','gray80','salmon','firebrick4')
+breaks <- c(-1600, -1, 0, 1, 1600)
+
 upper_all <- upper_inmbs %>% 
   filter(include == 'all') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
-  theme_bw() + scale_fill_viridis(option = 'A', limits = c(-1000, 1600)) + 
+  theme_bw() + 
+  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
   theme(text = element_text(size = 14)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
@@ -206,7 +230,7 @@ lower_all <- lower_inmbs %>%
   filter(include == 'all') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
-  theme_bw() + scale_fill_viridis(option = 'A', limits = c(-1000, 1600)) + 
+  theme_bw() +  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
   theme(text = element_text(size = 14)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
@@ -218,7 +242,8 @@ upper_only_ce <- upper_inmbs %>%
   filter(include == 'only_ce') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
-  theme_bw() + scale_fill_viridis(option = 'A', limits = c(-1000, 1600)) + 
+  theme_bw() + 
+  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
   theme(text = element_text(size = 14)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
@@ -230,7 +255,8 @@ lower_only_ce <- lower_inmbs %>%
   filter(include == 'only_ce') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
-  theme_bw() + scale_fill_viridis(option = 'A', limits = c(-1000, 1600)) + 
+  theme_bw() +  
+  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
   theme(text = element_text(size = 14)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
