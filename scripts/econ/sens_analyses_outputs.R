@@ -146,7 +146,7 @@ tab1_global <- tab1 %>% select(SA, vacc_type, n, n_total) %>%
 tile1 <- tab1_global %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
-  theme_bw() + scale_fill_viridis() + 
+  theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
   theme(text = element_text(size = 14)) +
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(percentage/100, 2)),
             col = 'white') +
@@ -170,7 +170,7 @@ tab2_global <- tab2 %>% select(SA, vacc_type, n, n_total) %>%
 tile2 <- tab2_global %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
-  theme_bw() + scale_fill_viridis() + 
+  theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
   theme(text = element_text(size = 14)) +
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(percentage/100, 2)),
             col = 'white') +
@@ -245,10 +245,21 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
        width=38,height=26,units="cm")
 
 
+save_inmbs <- rbind(upper_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice = 'Upper'),
+                    lower_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice = 'Lower')) %>% 
+  mutate(include = case_when(
+      include == 'all' ~ 'All countries adopt',
+      T ~ 'Countries adopt if cost-effective'
+    ),
+    SA = case_when(
+      SA == 'base' ~ 'Base',
+      SA == 'discount0' ~ 'DALYs 0% discounted',
+      SA == 'gdp0.3' ~ 'WTP 0.3 x GDPpc',
+      SA == 'gdp1' ~ 'WTP 1 x GDPpc'
+    )
+  )
 
-
-
-
+write_csv(save_inmbs, here::here('output','data','econ',paste0(scenario_name, econ_folder_name),paste0('global_INMB.csv')))
 
 
 
