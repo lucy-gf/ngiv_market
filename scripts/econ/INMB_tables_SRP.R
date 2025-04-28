@@ -2,8 +2,13 @@
 ### ECON TABLES ###
 options(scipen=1000000)
 
-scenario_name <- 'base_doseprice_upper'
-econ_folder_name <- '' # change this if looking at a sensitivity analysis
+scenario_name <- 'base'
+econ_folder_name <- paste0(ifelse(disease_modification, '_disease_mod',''),
+                           ifelse(outp_include, '_outpatient',''),
+                           ifelse((WTP_choice=='gdp'), '_gdp_',''),
+                           ifelse((WTP_choice=='gdp'), WTP_GDP_ratio,''),
+                           ifelse(discount_SA, '_discount0', ''),
+                           ifelse(price_used != 'midpoint', paste0('_doseprice_',price_used), ''))
 
 comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
 # no vaccination or current seasonal vaccines

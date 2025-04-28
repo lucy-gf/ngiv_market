@@ -9,13 +9,9 @@
 
 select <- dplyr::select
 
-price_used <- c('midpoint','lower','upper')[3]
-
 # sensitivity analyses 
 outp_include <- F # including outpatient/non-hospitalisation visits T/F
 disease_modification <- F; mod_val <- 0.5
-WTP_choice <- c('lancet','gdp')[1]; WTP_GDP_ratio <- 1 # proportion of GDP per capita for the willingness_to_pay threshold
-discount_SA <- F
 
 econ_folder_name <- paste0(ifelse(disease_modification, '_disease_mod',''),
                            ifelse(outp_include, '_outpatient',''),

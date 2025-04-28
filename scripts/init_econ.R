@@ -15,17 +15,6 @@
 # rerun [SIM 2]:
 # exclude countries where net monetary benefit < 0
 
-# in:
-# costs to producer
-## 1 - research investment
-## 2 - cost of vaccine dose production
-## 3 - profits of vaccine sales
-
-# out: 
-# national costs and benefits
-# producer costs and benefits
-# therefore distribution
-
 #### load relevant packages ####
 source(here::here('scripts','setup','packages.R'))
 
@@ -57,19 +46,35 @@ source(here::here('scripts','mmgh_data','mmgh_transform.R'))
 # source(here::here('scripts','econ','shrink_epi_data.R'))
 ## alternatively load 'vacc_global.rds' from OneDrive to skip this step
 
-#### produce national outputs ####
-source(here::here('scripts','econ','national_health_econ_1.R'))
+#### loop over sensitivity analyses ####
 
-#### make national INMB data.tables ####
-source(here::here('scripts','econ','INMB_outputs.R'))
+for(SA_option in 0:3){
+  
+  WTP_choice <- ifelse(SA_option %in% 1:2, 'gdp','lancet'); WTP_GDP_ratio <- c(1, 0.3)[SA_option] # proportion of GDP per capita for the willingness_to_pay threshold
+  discount_SA <- ifelse(SA_option == 3, T, F)
+  print(paste0('Sens analysis:', ifelse(SA_option == 0, ' none', ''),
+               ifelse(WTP_choice == 'gdp', paste0(' GDP (WTP = ', WTP_GDP_ratio, ' x GDPpc)'), ''),
+               ifelse(discount_SA == T, ' discounting DALYs at 0%', '')))
+  
+  for(price_used in c('upper','lower')){
+    
+    #### produce national outputs ####
+    source(here::here('scripts','econ','national_health_econ_1_SRP.R'))
+    
+    #### make national INMB data.tables ####
+    source(here::here('scripts','econ','INMB_outputs_SRP.R'))
+    
+    #### plot outputs ####
+    source(here::here('scripts','econ','INMB_plots_SRP.R'))
+    
+    #### make tables outputs ####
+    source(here::here('scripts','econ','INMB_tables_SRP.R'))
+    
+  }
+  
+}
 
-#### plot outputs ####
-source(here::here('scripts','econ','INMB_plots.R'))
-
-#### make tables outputs ####
-source(here::here('scripts','econ','INMB_tables.R'))
-
-
-
+#### make sensitivity analysis comparison outputs ####
+source(here::here('scripts','econ','sens_analyses_outputs.R'))
 
 

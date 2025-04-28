@@ -2,8 +2,13 @@
 ### ECON PLOTS ###
 options(scipen=1000000)
 
-scenario_name <- 'base_doseprice_upper'
-econ_folder_name <- '' # change this if looking at a sensitivity analysis
+scenario_name <- 'base'
+econ_folder_name <- paste0(ifelse(disease_modification, '_disease_mod',''),
+                           ifelse(outp_include, '_outpatient',''),
+                           ifelse((WTP_choice=='gdp'), '_gdp_',''),
+                           ifelse((WTP_choice=='gdp'), WTP_GDP_ratio,''),
+                           ifelse(discount_SA, '_discount0', ''),
+                           ifelse(price_used != 'midpoint', paste0('_doseprice_',price_used), ''))
 
 comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
 # no vaccination or current seasonal vaccines
@@ -199,7 +204,7 @@ S_sqrt_trans <- function() trans_new("S_sqrt",S_sqrt,IS_sqrt)
 
 ggplot() +
   geom_pointrange(data=threshold_prices_meas_w[!vacc_type=="0",],
-               aes(x=gdpcap,y=median,ymin=eti95L,ymax=eti95U,col=as.factor(vacc_type)),shape=4) +
+               aes(x=gdpcap,y=mean,ymin=eti95L,ymax=eti95U,col=as.factor(vacc_type)),shape=4) +
   theme_bw() + ylab('Threshold Price (USD)') +
   scale_color_manual(values=vtn_colors) +
   labs(col = 'Vaccine type') +
@@ -213,7 +218,6 @@ ggplot() +
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
 
-
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_threshold_price',comparator,'.png')),
        width=30,height=20,units="cm")
 
@@ -226,17 +230,17 @@ ggplot() +
   geom_segment(data = threshold_prices_meas_w[eti95L>zero_val],
                aes(x=gdpcap, xend=gdpcap, y=eti95L/1e0, yend=eti95U/1e0,
                    color=WHOREGION),alpha=0.4) +
-  geom_segment(data = threshold_prices_meas_w[median>zero_val & eti95L<=zero_val],
-               aes(x=gdpcap, xend=gdpcap, y=median/1e0, yend=eti95U/1e0,
+  geom_segment(data = threshold_prices_meas_w[mean>zero_val & eti95L<=zero_val],
+               aes(x=gdpcap, xend=gdpcap, y=mean/1e0, yend=eti95U/1e0,
                    color=WHOREGION),alpha=0.4) +
-  geom_segment(data = threshold_prices_meas_w[median>zero_val & eti95L<=zero_val],
+  geom_segment(data = threshold_prices_meas_w[mean>zero_val & eti95L<=zero_val],
                aes(x=gdpcap, xend=gdpcap, y=zero_val/1e0, yend=eti95U/1e0,
                    color=WHOREGION),alpha=0.25) +
-  geom_point(data = threshold_prices_meas_w[median<=zero_val],
+  geom_point(data = threshold_prices_meas_w[mean<=zero_val],
              aes(x=gdpcap, y=zero_val/1e0,
                  color=WHOREGION)) +
-  geom_point(data = threshold_prices_meas_w[median>zero_val],
-             aes(x=gdpcap, y=median/1e0,
+  geom_point(data = threshold_prices_meas_w[mean>zero_val],
+             aes(x=gdpcap, y=mean/1e0,
                  color=WHOREGION)) +
   ylab('Threshold vaccine price (USD)') + xlab('GDP per capita ($)') +
   labs(col = 'WHO Region') +
@@ -275,8 +279,8 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 
 # boxplot of median threshold prices by region
 ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
-  geom_boxplot(aes(x=vacc_type, y=median, fill=as.factor(vacc_type), col=as.factor(vacc_type)), outliers = T) +
-  geom_boxplot(aes(x=vacc_type, y=median), alpha=0, outliers=F) +
+  geom_boxplot(aes(x=vacc_type, y=mean, fill=as.factor(vacc_type), col=as.factor(vacc_type)), outliers = T) +
+  geom_boxplot(aes(x=vacc_type, y=mean), alpha=0, outliers=F) +
   ylab('Threshold price (USD)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
@@ -314,7 +318,7 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 
 ## AVERTED HEALTH OUTCOMES
 
-# read data from INMB_ouputs.R
+# read data from INMB_outputs.R
 epi_out_by_age_meas_w <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes_by_age',comparator,'.rds')))
 epi_out_meas_w  <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes',comparator,'.rds')))
 
@@ -407,7 +411,7 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
       plot=comb_fig,width=40,height=30,units="cm")
 
 # dalys averted by country
-ggplot(data=epi_out_meas_w[]) +
+ggplot(data=epi_out_meas_w) +
   geom_pointrange(aes(x=gdpcap,y=incr_total_DALYs_mean,
                        ymin=incr_total_DALYs_eti95L, ymax=incr_total_DALYs_eti95U,
                        col=as.factor(WHOREGION)),alpha=0.4) +
@@ -426,4 +430,10 @@ ggplot(data=epi_out_meas_w[]) +
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_DALYs_averted',comparator,'.png')),
        width=30,height=20,units="cm")
+
+
+
+
+
+
 

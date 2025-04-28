@@ -2,8 +2,13 @@
 ### INMB OUTPUTS ###
 options(scipen=1000000)
 
-scenario_name <- 'base_doseprice_upper'
-econ_folder_name <- '' # change this if looking at a sensitivity analysis
+scenario_name <- 'base'
+econ_folder_name <- paste0(ifelse(disease_modification, '_disease_mod',''),
+                           ifelse(outp_include, '_outpatient',''),
+                           ifelse((WTP_choice=='gdp'), '_gdp_',''),
+                           ifelse((WTP_choice=='gdp'), WTP_GDP_ratio,''),
+                           ifelse(discount_SA, '_discount0', ''),
+                           ifelse(price_used != 'midpoint', paste0('_doseprice_',price_used), ''))
 
 comparator <- c('no_vacc','0')[2] # which vaccine scenario is the comparator?
 # no vaccination or current seasonal vaccines
@@ -188,17 +193,15 @@ threshold_prices_base[, discounted_delivery_cost_tot := NULL]
 threshold_prices_base[, vacc_type := NULL]
 threshold_prices_base[, vacc_used := NULL]
 
-# # if against no_vacc, remove years where countries haven't yet introduced NGIVs
-# if(comparator == 'no_vacc'){
-  threshold_prices[, combo := paste0(iso3c,'_',year)]
-  threshold_prices_base[, combo := paste0(iso3c,'_',year)]
-  
-  threshold_prices <- threshold_prices[vacc_type == vacc_used]
-  threshold_prices_base <- threshold_prices_base[combo %in% threshold_prices$combo]
-  
-  threshold_prices[,combo := NULL]
-  threshold_prices_base[,combo := NULL]
-# }
+# remove years where countries haven't yet introduced NGIVs
+threshold_prices[, combo := paste0(iso3c,'_',year)]
+threshold_prices_base[, combo := paste0(iso3c,'_',year)]
+
+threshold_prices <- threshold_prices[vacc_type == vacc_used]
+threshold_prices_base <- threshold_prices_base[combo %in% threshold_prices$combo]
+
+threshold_prices[,combo := NULL]
+threshold_prices_base[,combo := NULL]
 
 threshold_prices <- threshold_prices[threshold_prices_base, on=c('iso3c','simulation_index','year')]
 threshold_prices[, vacc_used := NULL]
@@ -225,7 +228,7 @@ write_rds(threshold_prices_tot, here::here('output','data','econ',paste0(scenari
 # median threhold price
 
 threshold_prices_meas <- dt_to_meas(threshold_prices_tot, c('vacc_type','iso3c','country','WHOREGION','gdpcap'), usingMean = T)
-threshold_prices_meas_w <- dcast(threshold_prices_meas ,
+threshold_prices_meas_w <- dcast(threshold_prices_meas,
                         vacc_type+iso3c+country+gdpcap+WHOREGION~measure, 
                         value.var=c('threshold_price'))
 write_rds(threshold_prices_meas_w, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('threshold_prices_meas_w_',comparator,'.rds')))

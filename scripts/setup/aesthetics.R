@@ -102,17 +102,22 @@ eti95U <- function(x){
 
 dt_to_meas <- function(dt, # data.table input
                          cols, # vector of column names to group by
-                         using50 = F
+                         using50 = F,
+                         usingMean = F
                        ){
+  
+  point_measure <- ifelse(usingMean, 'mean', 'median')
+  
   out <- data.table()
+  
   if(using50 == T){
-    for(meas in c('median','eti50L', 'eti50U', 'eti95L', 'eti95U')){
+    for(meas in c(point_measure,'eti50L', 'eti50U', 'eti95L', 'eti95U')){
       dt_m <- dt[, lapply(.SD, get(meas)), by = cols]
       dt_m[, measure := meas]
       out <- rbind(out, dt_m)
     }
   }else{
-    for(meas in c('median', 'eti95L', 'eti95U')){
+    for(meas in c(point_measure, 'eti95L', 'eti95U')){
       dt_m <- dt[, lapply(.SD, get(meas)), by = cols]
       dt_m[, measure := meas]
       out <- rbind(out, dt_m)
