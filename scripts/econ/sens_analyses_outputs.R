@@ -133,7 +133,7 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
-  facet_grid(WHOREGION~SA, scales='fixed', labeller = labeller(WHOREGION = who_region_labs,
+  facet_grid(WHOREGION~SA, scales='free', labeller = labeller(WHOREGION = who_region_labs,
                                                                SA = supp.labs.sa)) +
   theme_bw() + xlab('Vaccine type') +
   theme(text=element_text(size=12), 
