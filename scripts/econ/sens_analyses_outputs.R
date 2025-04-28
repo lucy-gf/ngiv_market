@@ -120,7 +120,7 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, 0, 10, 30, 100, 300, 1000, 3000)) 
+  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, -3, 0, 3, 10, 30, 100, 300, 1000, 3000)) 
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'.png')),
        width=30,height=35,units="cm")
@@ -140,7 +140,7 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, 0, 10, 30, 100, 300, 1000, 3000)) 
+  ) + scale_y_continuous(transform = 'pseudo_log', breaks = c(-30, -10, -3, 0, 3, 10, 30, 100, 300, 1000, 3000)) 
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('WHO_region_threshold_price',comparator,'_free.png')),
        width=30,height=35,units="cm")
