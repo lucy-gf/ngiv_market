@@ -3,7 +3,9 @@
 
 threshold_prices_meas_w <- data.table()
 econ_inmb_meds_w <- data.table()
+econ_inmb_mean_w <- data.table()
 econ_inmb_meds_w_lower <- data.table()
+econ_inmb_mean_w_lower <- data.table()
 upper_inmbs <- data.table()
 lower_inmbs <- data.table()
 
@@ -32,15 +34,20 @@ for(SA_option in 0:3){
   
   econ_inmb_meds_w <- rbind(econ_inmb_meds_w, econ_inmb_meds_w_SA)
   
+  econ_inmb_mean_w_SA <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_inmb_mean_w.rds'))
+  econ_inmb_mean_w_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_upper','',econ_folder_name)))]
+  
+  econ_inmb_mean_w <- rbind(econ_inmb_mean_w, econ_inmb_mean_w_SA)
+  
   upper_inmbs_SA <- data.table(read_csv(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table2_',comparator,'.csv')), show_col_types = F))
-  upper_inmbs_SA <- upper_inmbs_SA[WHOREGION == 'Global']
+  # upper_inmbs_SA <- upper_inmbs_SA[WHOREGION == 'Global']
   upper_inmbs_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_upper','',econ_folder_name)))]
   upper_inmbs_SA[, include := 'all']
   
   upper_inmbs <- rbind(upper_inmbs, upper_inmbs_SA)
   
   upper_inmbs_SA <- data.table(read_csv(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table3_',comparator,'.csv')), show_col_types = F))
-  upper_inmbs_SA <- upper_inmbs_SA[WHOREGION == 'Global']
+  # upper_inmbs_SA <- upper_inmbs_SA[WHOREGION == 'Global']
   upper_inmbs_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_upper','',econ_folder_name)))]
   upper_inmbs_SA[, include := 'only_ce']
   
@@ -57,15 +64,20 @@ for(SA_option in 0:3){
   
   econ_inmb_meds_w_lower <- rbind(econ_inmb_meds_w_lower, econ_inmb_meds_w_lower_SA)
   
+  econ_inmb_mean_w_lower_SA <- read_rds(here::here('output','data','econ',paste0(scenario_name,econ_folder_name),'outputs','econ_inmb_mean_w.rds'))
+  econ_inmb_mean_w_lower_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_lower','',econ_folder_name)))]
+  
+  econ_inmb_mean_w_lower <- rbind(econ_inmb_mean_w_lower, econ_inmb_mean_w_lower_SA)
+  
   lower_inmbs_SA <- data.table(read_csv(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table2_',comparator,'.csv')), show_col_types = F))
-  lower_inmbs_SA <- lower_inmbs_SA[WHOREGION == 'Global']
+  # lower_inmbs_SA <- lower_inmbs_SA[WHOREGION == 'Global']
   lower_inmbs_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_lower','',econ_folder_name)))]
   lower_inmbs_SA[, include := 'all']
   
   lower_inmbs <- rbind(lower_inmbs, lower_inmbs_SA)
   
   lower_inmbs_SA <- data.table(read_csv(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table3_',comparator,'.csv')), show_col_types = F))
-  lower_inmbs_SA <- lower_inmbs_SA[WHOREGION == 'Global']
+  # lower_inmbs_SA <- lower_inmbs_SA[WHOREGION == 'Global']
   lower_inmbs_SA[, SA := ifelse(SA_option == 0, 'base', gsub('_','',gsub('_doseprice_lower','',econ_folder_name)))]
   lower_inmbs_SA[, include := 'only_ce']
   
@@ -84,6 +96,9 @@ if(!dir.exists(here::here('output','data','econ',paste0(scenario_name, econ_fold
 
 supp.labs.sa <- c('Base','DALYs 0% discounted','WTP 0.3 x GDPpc', 'WTP 1 x GDPpc')
 names(supp.labs.sa) <- c('base','discount0','gdp0.3', 'gdp1')
+
+supp.labs.ce <- c('All countries','Only cost-effective countries')
+names(supp.labs.ce) <- c('all','only_ce')
 
 # # boxplot of median threshold prices by region
 # ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
@@ -168,7 +183,7 @@ tile1 <- tab1_global %>%
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
   theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
   theme(text = element_text(size = 14)) +
-  geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(percentage/100, 2)),
+  geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = format(round(percentage/100, 2), nsmall = 2)),
             col = 'white') +
   labs(x = 'Vaccine type', y = '', fill = 'Proportion of countries\ncost-effective') + 
   ggtitle('Upper price point') + 
@@ -191,15 +206,16 @@ tile2 <- tab2_global %>%
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
   theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
-  theme(text = element_text(size = 14)) +
-  geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(percentage/100, 2)),
+  theme(text = element_text(size = 14),
+        legend.position = 'none') +
+  geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = format(round(percentage/100, 2), nsmall = 2)),
             col = 'white') +
   labs(x = 'Vaccine type', y = '', fill = 'Proportion of countries\ncost-effective') + 
   ggtitle('Lower price point') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa) +
   plot_layout(guides = 'collect', axes = "collect"); tile2
 
-tile2 + tile1 + plot_layout(guides = 'collect', nrow = 1)
+p1 <- (tile2 + tile1) + plot_layout(guides = 'collect', nrow = 1); p1
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('proportion_CE.png')),
        width=48,height=18,units="cm")
@@ -214,7 +230,8 @@ colorscale <- c('royalblue4', 'lightblue','gray80','salmon','firebrick4')
 breaks <- c(-1600, -1, 0, 1, 1600)
 
 upper_all <- upper_inmbs %>% 
-  filter(include == 'all') %>% 
+  filter(include == 'all',
+         WHOREGION == 'Global') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() + 
@@ -227,7 +244,8 @@ upper_all <- upper_inmbs %>%
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); upper_all
 
 lower_all <- lower_inmbs %>% 
-  filter(include == 'all') %>% 
+  filter(include == 'all',
+         WHOREGION == 'Global') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() +  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
@@ -239,7 +257,8 @@ lower_all <- lower_inmbs %>%
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); lower_all
 
 upper_only_ce <- upper_inmbs %>% 
-  filter(include == 'only_ce') %>% 
+  filter(include == 'only_ce',
+         WHOREGION == 'Global') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() + 
@@ -252,7 +271,8 @@ upper_only_ce <- upper_inmbs %>%
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); upper_only_ce
 
 lower_only_ce <- lower_inmbs %>% 
-  filter(include == 'only_ce') %>% 
+  filter(include == 'only_ce',
+         WHOREGION == 'Global') %>% 
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() +  
@@ -264,11 +284,25 @@ lower_only_ce <- lower_inmbs %>%
   ggtitle('Lower price point\n(only cost-effective countries)') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); lower_only_ce
 
-(lower_all + upper_all + lower_only_ce + upper_only_ce) +
-  plot_layout(ncol = 2, nrow = 2, guides = 'collect')
+p2 <- (lower_all + upper_all + lower_only_ce + upper_only_ce) +
+  plot_layout(ncol = 2, nrow = 2, guides = 'collect'); p2
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('global_INMB.png')),
        width=38,height=26,units="cm")
+
+
+layout <- '
+AABB
+AABB
+CCCC
+CCCC
+CCCC
+CCCC
+'
+p1 + p2 + plot_layout(nrow = 2, design = layout)
+
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('combined_tiles.png')),
+       width=38,height=38,units="cm")
 
 
 save_inmbs <- rbind(upper_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice = 'Upper'),
@@ -286,6 +320,44 @@ save_inmbs <- rbind(upper_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice 
   )
 
 write_csv(save_inmbs, here::here('output','data','econ',paste0(scenario_name, econ_folder_name),paste0('global_INMB.csv')))
+
+
+lower_bars <- econ_inmb_mean_w_lower %>% 
+  filter(SA == 'base') %>% 
+  mutate(negative = case_when(mean < 0 ~ '< 0', T ~ '> 0')) %>% 
+  ggplot() +
+  geom_bar(aes(x = negative, y = mean/1e9, fill = WHOREGION),
+           position = 'stack', stat = 'identity') +
+  geom_hline(data = econ_inmb_mean_w_lower %>% filter(SA == 'base') %>% 
+               group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
+             aes(yintercept = sum), lty = 2) +
+  scale_y_continuous(breaks = seq(-600, 600, by = 200)) + 
+  facet_grid(. ~ vacc_type, scales = 'free_y', labeller = labeller(SA = supp.labs.sa,
+                                                                  include = supp.labs.ce)) +
+  scale_fill_manual(values = WHO_colors, labels=who_region_labs2) +
+  theme_bw() + ggtitle('Lower price point') + 
+  labs(y = 'INMB (billions)', x = 'INMB negative/positive', fill = 'WHO Region'); lower_bars 
+
+upper_bars <- econ_inmb_mean_w %>% 
+  filter(SA == 'base') %>% 
+  mutate(negative = case_when(mean < 0 ~ '< 0', T ~ '> 0')) %>% 
+  ggplot() +
+  geom_bar(aes(x = negative, y = mean/1e9, fill = WHOREGION), #col = 'white', lwd = 0.1,
+           position = 'stack', stat = 'identity') +
+  geom_hline(data = econ_inmb_mean_w %>% filter(SA == 'base') %>% 
+               group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
+             aes(yintercept = sum), lty = 2) +
+  scale_y_continuous(breaks = seq(-600, 600, by = 200)) + 
+  facet_grid(. ~ vacc_type, scales = 'free_y', labeller = labeller(SA = supp.labs.sa,
+                                                                   include = supp.labs.ce)) +
+  scale_fill_manual(values = WHO_colors, labels=who_region_labs2) +
+  theme_bw() + ggtitle('Upper price point') + 
+  labs(y = 'INMB (billions)', x = 'INMB negative/positive', fill = 'WHO Region'); upper_bars 
+
+lower_bars + upper_bars + plot_layout(guides = 'collect', nrow = 2)
+
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('INMB_distribution.png')),
+       width=30,height=26,units="cm")
 
 
 

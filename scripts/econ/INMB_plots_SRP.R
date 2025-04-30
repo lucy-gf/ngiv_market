@@ -79,6 +79,19 @@ ggplot(econ_inmb_meds_w) +
   scale_color_manual(values = vtn_colors) + labs(col='Vaccine type') +
   facet_grid(vacc_type~., scales='free') + theme_bw() 
 
+# ggplot(econ_inmb_meds_w) + 
+#   geom_boxplot(aes(x = vacc_type, y = median/gdpcap, fill=vacc_type, col = vacc_type)) +
+#   geom_boxplot(aes(x = vacc_type, y = median/gdpcap, fill=vacc_type), outlier.shape = NA) +
+#   # geom_point(aes(x = vacc_type, y = median, col=vacc_type)) + 
+#   xlab('Vaccine type') + 
+#   ylab('Incremental net monetary benefit') + 
+#   scale_fill_manual(values = vtn_colors) + 
+#   scale_color_manual(values = vtn_colors) +
+#   labs(col='Vaccine type') +
+#   scale_y_continuous(transform = 'pseudo_log') + 
+#   facet_wrap(.~income_g, scales='fixed', nrow=1) + theme_bw() +
+#   theme(legend.position = 'none')
+
 ## ALL COUNTRY PLOTS ##
 
 zero_val <- min(econ_inmb_meds_w[median > 0]$median, econ_inmb_meds_w[eti95L > 0]$eti95L, 1e5)
@@ -225,7 +238,7 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 # zero_val <- min(threshold_prices_meas_w[median > 0]$median, threshold_prices_meas_w[eti95L > 0]$eti95L)
 zero_val = 0.1
 
-ggplot() +
+thresh_national <- ggplot() +
   geom_hline(yintercept = zero_val/1e0, lty=2) + 
   geom_segment(data = threshold_prices_meas_w[eti95L>zero_val],
                aes(x=gdpcap, xend=gdpcap, y=eti95L/1e0, yend=eti95U/1e0,
@@ -242,16 +255,16 @@ ggplot() +
   geom_point(data = threshold_prices_meas_w[mean>zero_val],
              aes(x=gdpcap, y=mean/1e0,
                  color=WHOREGION)) +
-  ylab('Threshold vaccine price (USD)') + xlab('GDP per capita ($)') +
+  ylab('Threshold vaccine price (USD 2022)') + xlab('GDP per capita (USD 2022)') +
   labs(col = 'WHO Region') +
   scale_color_manual(values = WHO_colors, labels=who_region_labs2) +
-  scale_y_log10(limits=c(0.01,10000), breaks=c(zero_val/1e0,1,10,100,1000),labels=c('<0.1',1,10,100,1000)) +
-  scale_x_log10(limits=c(200,110000), breaks=c(300,1000,3000,10000,30000,100000)) +
-  facet_grid(vacc_type~., scales='fixed') +
-  theme_bw() + theme(text=element_text(size=12))
+  scale_y_log10(limits=c(zero_val,3000), breaks=c(zero_val,1,10,100,1000),labels=c('<0.1',1,10,100,1000)) +
+  scale_x_log10(limits=c(200,110000), breaks=c(1000,10000,100000)) +
+  facet_grid(.~vacc_type, scales='fixed') +
+  theme_bw() + theme(text=element_text(size=12)); thresh_national
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_threshold_price',comparator,'.png')),
-       width=30,height=20,units="cm")
+       width=30,height=14,units="cm")
 
 
 # plot vaccine threshold price by region
@@ -278,10 +291,10 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 #        width=30,height=20,units="cm")
 
 # boxplot of median threshold prices by region
-ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
+thresh_box <- ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
   geom_boxplot(aes(x=vacc_type, y=mean, fill=as.factor(vacc_type), col=as.factor(vacc_type)), outliers = T) +
   geom_boxplot(aes(x=vacc_type, y=mean), alpha=0, outliers=F) +
-  ylab('Threshold price (USD)') +
+  ylab('Threshold price (USD 2022)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
@@ -291,10 +304,17 @@ ggplot(data=threshold_prices_meas_w[!vacc_type=="0",]) +
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-        )
+        ); thresh_box
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_threshold_price',comparator,'.png')),
        width=30,height=20,units="cm")
+
+
+thresh_national + thresh_box + 
+  plot_layout(nrow = 2) + plot_annotation(tag_levels = 'a', tag_prefix = '(', tag_suffix = ')')
+
+ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('threshold_patchwork_',comparator,'.png')),
+       width=36,height=30,units="cm")
 
 # grouped across region
 # ggplot(data=threshold_prices[!vacc_type=="0",]) +
@@ -335,7 +355,7 @@ tmp[WHOREGION=="EMR",  pop := 927470600]
 
 panel1a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_total_DALYs_mean/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
-  ylab('DALYs Averted (millions)') +
+  ylab('DALYs averted (millions)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
@@ -352,7 +372,7 @@ panel1a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_total_DALYs_mean/1e6,fill=a
 
 panel1b <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_total_DALYs_mean*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
-  ylab('DALYs Averted per 100,000 population') +
+  ylab('DALYs averted per 100,000 population') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
@@ -377,7 +397,7 @@ tmp[WHOREGION=="EMR",  pop := 927470600]
 
 panel2a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
-  ylab('Total Deaths Averted (millions)') +
+  ylab('Total deaths averted (millions)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
@@ -394,7 +414,7 @@ panel2a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean/1e6,fill=as.fac
 
 panel2b <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
-  ylab('Deaths Averted per 100,000 population') +
+  ylab('Deaths averted per 100,000 population') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
@@ -408,7 +428,7 @@ panel2b <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean*1e5/pop,fill=as
 
 comb_fig <- gridExtra::grid.arrange(panel1a,panel1b,panel2a,panel2b,ncol=2)
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_Deaths_and_DALYs_averted',comparator,'.png')),
-      plot=comb_fig,width=40,height=30,units="cm")
+      plot=comb_fig,width=46,height=30,units="cm")
 
 # dalys averted by country
 ggplot(data=epi_out_meas_w) +

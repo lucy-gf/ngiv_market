@@ -101,11 +101,20 @@ setnames(WHO_regions, 'country_code','iso3c')
 WHO_regions <- WHO_regions[iso3c %in% econ_inmb_meds_w$iso3c]
 econ_inmb_meds_w <- econ_inmb_meds_w[WHO_regions, on='iso3c']
 
+# means
+econ_inmb_mean <- dt_to_meas(econ_inmb, c('vacc_type','iso3c','income_g','names'), usingMean = T)
+econ_inmb_mean_w <- dcast(econ_inmb_mean[, c('vacc_type','iso3c','income_g','inmb','measure')],
+                          vacc_type+iso3c+income_g~measure, value.var='inmb')
+
+econ_inmb_mean_w <- econ_inmb_mean_w[cost_predic_c[simulation_index==1&age_grp==1&iso3c%in%econ_inmb_meds_w$iso3c][,c('iso3c','gdpcap')], on='iso3c']
+econ_inmb_mean_w <- econ_inmb_mean_w[WHO_regions, on='iso3c']
+
 # saving data
 write_rds(econ_inmb, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs','econ_inmb.rds'))
 write_rds(econ_nmb2, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs','econ_nmb2.rds'))
 write_rds(econ_nmb_meds_w, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs','econ_nmb_meds_w.rds'))
 write_rds(econ_inmb_meds_w, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs','econ_inmb_meds_w.rds'))
+write_rds(econ_inmb_mean_w, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs','econ_inmb_mean_w.rds'))
 
 ### NNV AND THRESHOLD PRICES HERE ###
 ### THESE NEED CHECKING ###
