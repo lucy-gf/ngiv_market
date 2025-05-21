@@ -109,55 +109,56 @@ demand_input <- demand_input %>% arrange(vacc_scenario,country,year,model_age_gr
 # save data
 write_csv(demand_input, here::here('data','MMGH','demand_input.csv'))
 
-# ####################################
-# # testing these make sense:
-# 
-# dem_test <- demand_input %>% mutate(prop = doses/pop)
-# 
-# mmgh_demand[year == 2031 & iso3c=='KOR' & pop_name=='children']
-# mmgh_pop[year == 2031 & iso3c=='KOR' & pop_name %in% c('6-59mo','5-17yo')]
-# 
-# # more doses than population!
-# 
-# View(dem_test %>% filter(prop>1))
-# 
-# ## plots:
-# # 
-# demand_input %>% filter(iso3c %in% c('AUS')) %>%
-#   ggplot(aes(x=year,y=doses/1000000,col=vacc_scenario)) +
-#   geom_line() + facet_grid(iso3c~model_age_group, scales='free') +
-#   theme_bw() + ylab('Doses, millions') +
-#   scale_color_manual(values = vtn_colors)
-# # 
-# mmgh_demand %>% filter(iso3c %in% c('KOR','CUB','BTN')) %>%
-#   filter(pop_name == 'children') %>%
-#   ggplot() +
-#   geom_line(aes(x=year,y=doses,col=vacc_scenario),lwd=1) +
-#   facet_grid(country~., scales='free') +
-#   geom_line(data = mmgh_pop %>%
-#               filter(iso3c %in% c('KOR','CUB','BTN') &
-#                        pop_name %in% c('6-59mo','5-17yo') &
-#                        year %in% 2023:2050) %>%
-#               pivot_wider(names_from=pop_name, values_from = pop),
-#             aes(x=year,y=`6-59mo`+`5-17yo`), lty = 2, lwd=1) +
-#   theme_bw() + ylab('') + theme(text=element_text(size = 14)) +
-#   # scale_color_manual(values = vtn_colors)
-#   scale_color_viridis(discrete=T) + xlab('Year') + scale_x_continuous(breaks=2023:2050)
-# ggsave(here::here('mmgh_plot.png'), width=16, height=12)
-# 
-# mmgh_demand %>% filter(iso3c %in% c('GBR','FRA','USA')) %>%
-#   filter(pop_name == 'children') %>%
-#   ggplot() +
-#   geom_line(aes(x=year,y=doses,col=vacc_scenario),lwd=1) +
-#   facet_grid(country~., scales='free') +
-#   geom_line(data = mmgh_pop %>%
-#               filter(iso3c %in% c('GBR','FRA','USA') &
-#                        pop_name %in% c('6-59mo','5-17yo') &
-#                        year %in% 2023:2050) %>%
-#               pivot_wider(names_from=pop_name, values_from = pop),
-#             aes(x=year,y=`6-59mo`+`5-17yo`), lty = 2, lwd=1) +
-#   theme_bw() + ylab('') + theme(text=element_text(size = 14)) +
-#   # scale_color_manual(values = vtn_colors)
-#   scale_color_viridis(discrete=T) + xlab('Year') + scale_x_continuous(breaks=2023:2050)
+
+## figures for paper ###
+
+demand_input$vacc_used <- factor(demand_input$vacc_used, 
+                                 levels = rev(unique(demand_input$vacc_used)))
+
+demand_input %>% group_by(WHO_region, vacc_scenario, year, vacc_used) %>% 
+  summarise(pop = sum(pop),
+         doses = sum(doses)) %>% 
+  ggplot() + 
+  geom_bar(aes(x = year, y = doses/1e6, fill = vacc_used),
+           stat = 'identity', position = 'stack') +
+  theme_bw() + 
+  scale_fill_manual(values = vtn_colors, guide = guide_legend(reverse = TRUE)) + 
+  facet_grid(WHO_region ~ vacc_scenario, scales = 'free') +
+  labs(fill = 'Vaccine in use', x = 'Year', y = 'Doses (millions)')
+
+
+demand_input %>% group_by(WHO_region, vacc_scenario, year, vacc_used) %>% 
+  summarise(pop = sum(pop),
+         doses = sum(doses)) %>% 
+  ggplot() + 
+  geom_bar(aes(x = year, y = 1e5*doses/pop, fill = vacc_used),
+           stat = 'identity', position = 'stack') +
+  theme_bw() + 
+  scale_fill_manual(values = vtn_colors, guide = guide_legend(reverse = TRUE)) + 
+  facet_grid(WHO_region ~ vacc_scenario, scales = 'free',
+             labeller = labeller(WHO_region = who_region_labs_o)) +
+  labs(fill = 'Vaccine in use', x = 'Year', y = 'Vaccine doses per 100,000 population') +
+  theme(text = element_text(size = 16))
+
+ggsave(here::here('output','figures','epi','vaccine_doses_by_pop.png'),
+       width = 14, height = 10)
+
+demand_input %>% group_by(model_age_group, vacc_scenario, year, WHO_region) %>% 
+  summarise(pop = sum(pop),
+            doses = sum(doses)) %>% 
+  ggplot() + 
+  geom_line(aes(x = year, y = 1e5*doses/pop, col = vacc_scenario), lwd = 0.8) +
+  theme_bw() + 
+  scale_color_manual(values = vtn_colors, guide = guide_legend(reverse = F)) + 
+  facet_grid(WHO_region ~ model_age_group, scales = 'free',
+             labeller = labeller(model_age_group = supp.labs.agegrps,
+                                 WHO_region = who_region_labs_o)) +
+  labs(col = 'Vaccine scenario', x = 'Year', y = 'Vaccine doses per 100,000 population') +
+  theme(text = element_text(size = 16)) +
+  scale_x_continuous(breaks = c(2030,2040,2050))
+
+ggsave(here::here('output','figures','epi','vaccine_doses_by_age_group.png'),
+       width = 14, height = 12)
+
 
 

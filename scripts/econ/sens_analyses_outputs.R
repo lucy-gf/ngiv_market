@@ -9,6 +9,8 @@ econ_inmb_mean_w_lower <- data.table()
 upper_inmbs <- data.table()
 lower_inmbs <- data.table()
 
+comparator <- '0'
+
 for(SA_option in 0:3){
   
   WTP_choice <- ifelse(SA_option %in% 1:2, 'gdp','lancet'); WTP_GDP_ratio <- c(1, 0.3)[SA_option] # proportion of GDP per capita for the willingness_to_pay threshold
@@ -305,6 +307,8 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
        width=38,height=38,units="cm")
 
 
+## SAVE INMB DATA ##
+
 save_inmbs <- rbind(upper_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice = 'Upper'),
                     lower_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice = 'Lower')) %>% 
   mutate(include = case_when(
@@ -319,8 +323,11 @@ save_inmbs <- rbind(upper_inmbs %>% select(!INMB_mill_num) %>% mutate(doseprice 
     )
   )
 
+save_inmbs <- save_inmbs %>% pivot_wider(names_from = c(include, doseprice), values_from = INMB_millions)
+
 write_csv(save_inmbs, here::here('output','data','econ',paste0(scenario_name, econ_folder_name),paste0('global_INMB.csv')))
 
+## PLOT INMB DISTRIBUTION ##
 
 lower_bars <- econ_inmb_mean_w_lower %>% 
   filter(SA == 'base') %>% 
@@ -357,7 +364,7 @@ upper_bars <- econ_inmb_mean_w %>%
 lower_bars + upper_bars + plot_layout(guides = 'collect', nrow = 2)
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('INMB_distribution.png')),
-       width=30,height=26,units="cm")
+       width=30,height=20,units="cm")
 
 
 

@@ -38,6 +38,11 @@ names(supp.labs.n) <- c(1:5)
 who_region_labs <- c('African\nRegion','Region of\nthe Americas','South-East\nAsian Region','European\nRegion',
                      'Eastern\nMediterranean Region', 'Western\nPacific Region')
 names(who_region_labs) <- c('AFR','AMR','EMR','EUR','SEAR','WPR')
+
+who_region_labs_o <- c('African\nRegion','Region of\nthe Americas','South-East\nAsian Region','European\nRegion',
+                     'Eastern\nMediterranean\nRegion', 'Western\nPacific Region')
+names(who_region_labs_o) <- c('AFRO','AMRO','EMRO','EURO','SEARO','WPRO')
+
 who_region_labs2 <- c('African Region','Region of the Americas','South-East Asian Region','European Region',
                      'Eastern Mediterranean Region', 'Western Pacific Region')
 names(who_region_labs2) <- c('AFR','AMR','EMR','EUR','SEAR','WPR')

@@ -76,6 +76,14 @@ for(vt in unique(regional_inmbs2$vacc_type)){
 }
 regional_inmbs <- regional_inmbs[, c('WHOREGION','vacc_type','simulation_index','inmb')]
 
+# fill in regions with no cost-effective countries
+regional_inmbs <- regional_inmbs %>% 
+  complete(WHOREGION = unique(tab2_save$WHOREGION[tab2_save$WHOREGION != 'Global']),
+           vacc_type = unique(regional_inmbs$vacc_type),
+           simulation_index = unique(regional_inmbs$simulation_index),
+           fill = list(inmb = 0))
+regional_inmbs <- data.table(regional_inmbs)
+
 global_inmbs <- regional_inmbs[, c('vacc_type','simulation_index','inmb')][, lapply(.SD, sum), by=c('vacc_type','simulation_index')]
 global_inmbs[, WHOREGION := 'Global']
 
