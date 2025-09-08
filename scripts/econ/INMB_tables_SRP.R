@@ -114,11 +114,84 @@ write_csv(tab3_save, here::here('output','data','econ',paste0(scenario_name, eco
 write_csv(include_dt, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), comparator,paste0('table4_',comparator,'.csv')))
 
 
+# mean threshold prices, compared to Plos Med analysis, with intro years
 
+format_price <- function(x){
+  
+  out_vec <- rep('', length(x))
+  
+  for(i in 1:length(x)){
+    
+    neg <- x[i] < 0
+    
+    a <- abs(x[i])
+    if(a < 100){f <- round(a, 2)}else{
+      f <- round(a)
+    }
+    
+    if(0 <= f & f < 1 & nchar(f) == 3){f <- paste0(f, 0)}
+    if(0 <= f & f < 1 & nchar(f) == 1){f <- paste0(f, '.00')}
+    if(1 <= f & f < 10 & nchar(f) == 3){f <- paste0(f, 0)}
+    if(1 <= f & f < 10 & nchar(f) == 1){f <- paste0(f, '.00')}
+    if(10 <= f & f < 100 & nchar(f) == 4){f <- paste0(f, 0)}
+    if(10 <= f & f < 100 & nchar(f) == 2){f <- paste0(f, '.00')}
+    
+    out_vec[i] <- paste0(ifelse(neg,'-',''), '$', f)
+    
+  }
+  
+  out_vec
+  
+}
 
+mean_tp <- readRDS(here::here('output','data','econ','base_doseprice_lower', 'outputs','threshold_prices_meas_w_0.rds')) %>% 
+  filter(vacc_type %in% c('A.1','C')) %>% 
+  mutate(
+    mean = format_price(mean),
+    eti95L = format_price(eti95L),
+    eti95U = format_price(eti95U)
+  ) %>% 
+  mutate(new_threshold = paste0(mean, ' (', eti95L, ' - ', eti95U, ')'))
 
+load(here::here('output','data','econ','base_doseprice_lower', 'outputs','total_nat_sum'))
+tp_plos_med <- total_nat_sum[vt %in% c(2,5)]
+tp_plos_med[vt == 2, vacc_type := 'A.1']
+tp_plos_med[vt == 5, vacc_type := 'C']
+mean_tp_plos_med <- dt_to_meas(tp_plos_med[, c('country_code','vacc_type','ct_n','threshold_price')], cols = c('country_code','vacc_type','ct_n'), 
+                               usingMean = T) %>% 
+  pivot_wider(id_cols = c('country_code','vacc_type','ct_n'), names_from = measure, values_from = threshold_price) %>% 
+  setnames('country_code','iso3c')
+mean_tp_plos_med <- mean_tp_plos_med %>% filter(ct_n=='0-17, 65+') %>% 
+  mutate(
+    mean = format_price(mean),
+    eti95L = format_price(eti95L),
+    eti95U = format_price(eti95U)
+  ) %>% 
+  mutate(plos_threshold = paste0(mean, ' (', eti95L, ' - ', eti95U, ')')) %>% 
+  filter(iso3c %in% mean_tp$iso3c)
+    
+country_specs <- data.table(read_xlsx(here::here('data','MMGH','country_specs.xlsx')))
+intro_years <- data.table(read_csv(here::here('data','MMGH','intro_years.csv'), show_col_types = F))
+intro_years[, income_g := case_when(
+  grepl('High', income_g) ~ 'HIC',
+  grepl('Upper', income_g) ~ 'UMIC',
+  grepl('Lower', income_g) ~ 'LMIC',
+  grepl('Low inc', income_g) ~ 'LIC',
+)]
+setnames(intro_years, 'vacc_scenario', 'vacc_type')
+country_specs <- rbind(cbind(country_specs, vacc_type = 'A.1'),
+                       cbind(country_specs, vacc_type = 'C')) %>% 
+  left_join(intro_years %>% filter(vacc_type%in% c('A.1','C')), by = c('income_g','vacc_type'))
 
+ov_table <- mean_tp %>% 
+  select(iso3c, country, vacc_type, WHOREGION, new_threshold) %>% 
+  left_join(mean_tp_plos_med %>% select(iso3c, vacc_type, plos_threshold), by = c('vacc_type','iso3c')) %>% 
+  left_join(country_specs %>% select(iso3c, vacc_type, income_g, intro_year), by = c('vacc_type','iso3c')) %>% 
+  select(country, WHOREGION, vacc_type, intro_year, new_threshold, plos_threshold)
 
+colnames(ov_table) <- c('Country','WHO Region','Vaccine type','Introduction year','Threshold price','Previously found threshold price')
+
+write.xlsx(ov_table, here::here('output','data','econ','threshold_comparison_table.xlsx'))
 
 
 

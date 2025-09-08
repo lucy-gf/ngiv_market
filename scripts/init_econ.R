@@ -67,6 +67,9 @@ for(SA_option in 0:3){
     #### plot outputs ####
     source(here::here('scripts','econ','INMB_plots_SRP.R'))
     
+    #### plot new fig 2 ####
+    source(here::here('scripts','econ','INMB_plots_SRP_CE.R'))
+    
     #### make tables outputs ####
     source(here::here('scripts','econ','INMB_tables_SRP.R'))
     

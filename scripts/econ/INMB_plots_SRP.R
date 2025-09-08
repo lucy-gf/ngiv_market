@@ -341,10 +341,11 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 # read data from INMB_outputs.R
 epi_out_by_age_meas_w <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes_by_age',comparator,'.rds')))
 epi_out_meas_w  <- read_rds(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes',comparator,'.rds')))
+epi_out <- readRDS(here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes',comparator,'_100sim.rds')))
 
 # dalys averted by region
-tmp <- epi_out_meas_w[,c('vacc_type','WHOREGION','incr_total_DALYs_mean')]
-tmp <- tmp[, lapply(.SD, sum), by=c('vacc_type','WHOREGION')]
+tmp <- epi_out[,c('simulation_index','vacc_type','WHOREGION','incr_total_DALYs')]
+tmp <- tmp[, lapply(.SD, sum), by=c('simulation_index','vacc_type','WHOREGION')]
 #doing this manually with separately calculated total pop
 tmp[WHOREGION=="SEAR", pop := 2200430685]
 tmp[WHOREGION=="WPR",  pop := 1822232144]
@@ -353,40 +354,45 @@ tmp[WHOREGION=="AFR",  pop := 1582549661]
 tmp[WHOREGION=="EUR",  pop := 896050485]
 tmp[WHOREGION=="EMR",  pop := 927470600]
 
-panel1a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_total_DALYs_mean/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+tmp <- dt_to_meas(tmp, cols = c('vacc_type','WHOREGION'))
+tmp_wide <- dcast(tmp, vacc_type + WHOREGION + pop ~ measure, value.var = 'incr_total_DALYs')
+
+panel1a <- ggplot(data=tmp_wide, aes(x=vacc_type,y=median/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
+  geom_errorbar(aes(ymin = eti95L/1e6, ymax = eti95U/1e6), col = 1, width = 0.5) +
   ylab('DALYs averted (millions)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
   facet_wrap(WHOREGION~., scales='fixed', nrow=1, labeller = labeller(WHOREGION=who_region_labs)) +
   theme_bw() + xlab('Vaccine type') +
-  theme(text=element_text(size=12), 
+  theme(text=element_text(size=16), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  );panel1a
 
 # ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_DALYs_averted',comparator,'.png')),
 #        width=30,height=10,units="cm")
 
-panel1b <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_total_DALYs_mean*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+panel1b <- ggplot(data=tmp_wide, aes(x=vacc_type,y=median*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
+  geom_errorbar(aes(ymin = eti95L*1e5/pop, ymax = eti95U*1e5/pop), col = 1, width = 0.5) +
   ylab('DALYs averted per 100,000 population') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
   facet_wrap(WHOREGION~., scales='fixed', nrow=1, labeller = labeller(WHOREGION=who_region_labs)) +
   theme_bw() + xlab('Vaccine type') +
-  theme(text=element_text(size=12), 
+  theme(text=element_text(size=16), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  );panel1b
 
 # deaths averted by region
-tmp <- epi_out_meas_w[,c('vacc_type','WHOREGION','incr_deaths_mean')]
-tmp <- tmp[, lapply(.SD, sum), by=c('vacc_type','WHOREGION')]
+tmp <- epi_out[,c('simulation_index','vacc_type','WHOREGION','incr_deaths')]
+tmp <- tmp[, lapply(.SD, sum), by=c('simulation_index','vacc_type','WHOREGION')]
 #doing this manually with separately calculated total pop
 tmp[WHOREGION=="SEAR", pop := 2200430685]
 tmp[WHOREGION=="WPR",  pop := 1822232144]
@@ -394,62 +400,100 @@ tmp[WHOREGION=="AMR",  pop := 1053543379]
 tmp[WHOREGION=="AFR",  pop := 1582549661]
 tmp[WHOREGION=="EUR",  pop := 896050485]
 tmp[WHOREGION=="EMR",  pop := 927470600]
+tmp <- dt_to_meas(tmp, cols = c('vacc_type','WHOREGION'))
+tmp_wide <- dcast(tmp, vacc_type + WHOREGION + pop ~ measure, value.var = 'incr_deaths')
 
-panel2a <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+panel2a <- ggplot(data=tmp_wide, aes(x=vacc_type,y=median/1e6,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
+  geom_errorbar(aes(ymin = eti95L/1e6, ymax = eti95U/1e6), col = 1, width = 0.5) +
   ylab('Total deaths averted (millions)') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
   facet_wrap(WHOREGION~., scales='fixed', nrow=1, labeller = labeller(WHOREGION=who_region_labs)) +
   theme_bw() + xlab('Vaccine type') +
-  theme(text=element_text(size=12), 
+  theme(text=element_text(size=16), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  );panel2a
 
 # ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_deaths_averted',comparator,'.png')),
 #        width=30,height=10,units="cm")
 
-panel2b <- ggplot(data=tmp[], aes(x=vacc_type,y=incr_deaths_mean*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
+panel2b <- ggplot(data=tmp_wide, aes(x=vacc_type,y=median*1e5/pop,fill=as.factor(vacc_type), col=as.factor(vacc_type))) +
   geom_bar(position='dodge',stat='identity') +
+  geom_errorbar(aes(ymin = eti95L*1e5/pop, ymax = eti95U*1e5/pop), col = 1, width = 0.5) +
   ylab('Deaths averted per 100,000 population') +
   scale_fill_manual(values=vtn_colors) +
   scale_color_manual(values=vtn_colors) +
   labs(fill = 'Vaccine type', color = 'Vaccine type') +
   facet_wrap(WHOREGION~., scales='fixed', nrow=1, labeller = labeller(WHOREGION=who_region_labs)) +
   theme_bw() + xlab('Vaccine type') +
-  theme(text=element_text(size=12), 
+  theme(text=element_text(size=16), 
         legend.position='none'#,
         # axis.text.x=element_blank(),
         # axis.ticks.x=element_blank()
-  )
+  );panel2b
 
 comb_fig <- gridExtra::grid.arrange(panel1a,panel1b,panel2a,panel2b,ncol=2)
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('WHO_region_Deaths_and_DALYs_averted',comparator,'.png')),
-      plot=comb_fig,width=46,height=30,units="cm")
+      plot=comb_fig,width=60,height=30,units="cm")
 
-# dalys averted by country
-ggplot(data=epi_out_meas_w) +
-  geom_pointrange(aes(x=gdpcap,y=incr_total_DALYs_mean,
-                       ymin=incr_total_DALYs_eti95L, ymax=incr_total_DALYs_eti95U,
-                       col=as.factor(WHOREGION)),alpha=0.4) +
-  ylab('Total DALYs Averted (millions)') +
-  scale_color_manual(values=WHO_colors, labels = who_region_labs2) +
-  labs(fill = 'WHO Region', color = 'WHO Region') +
-  scale_y_log10(limits=c(1000,100000000), breaks=c(1000,10000,100000,1000000,10000000,100000000)) +
-  scale_x_log10(limits=c(200,110000), breaks=c(300,1000,3000,10000,30000,100000)) +
-  facet_wrap(vacc_type~., scales='fixed', ncol=5, labeller = labeller(WHOREGION=who_region_labs)) +
-  theme_bw() + xlab('GDP per Capita') +
-  theme(text=element_text(size=12), 
-        legend.position='bottom',
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()
-  )
+# # dalys averted by country
+# ggplot(data=epi_out_meas_w) +
+#   geom_pointrange(aes(x=gdpcap,y=incr_total_DALYs_mean,
+#                        ymin=incr_total_DALYs_eti95L, ymax=incr_total_DALYs_eti95U,
+#                        col=as.factor(WHOREGION)),alpha=0.4) +
+#   ylab('Total DALYs Averted (millions)') +
+#   scale_color_manual(values=WHO_colors, labels = who_region_labs2) +
+#   labs(fill = 'WHO Region', color = 'WHO Region') +
+#   scale_y_log10(limits=c(1000,100000000), breaks=c(1000,10000,100000,1000000,10000000,100000000)) +
+#   scale_x_log10(limits=c(200,110000), breaks=c(300,1000,3000,10000,30000,100000)) +
+#   facet_wrap(vacc_type~., scales='fixed', ncol=5, labeller = labeller(WHOREGION=who_region_labs)) +
+#   theme_bw() + xlab('GDP per Capita') +
+#   theme(text=element_text(size=12), 
+#         legend.position='bottom',
+#         axis.text.x=element_blank(),
+#         axis.ticks.x=element_blank()
+#   )
+# 
+# ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_DALYs_averted',comparator,'.png')),
+#        width=30,height=20,units="cm")
 
-ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),comparator,paste0('country_DALYs_averted',comparator,'.png')),
-       width=30,height=20,units="cm")
+
+## total influenza infections averted ##
+
+cat('\nScenario: ', scenario_name, econ_folder_name, ', comparator = ', comparator, '\n', sep='')
+
+millions <- function(x){round(x/1e6, 1)}
+billions <- function(x){round(x/1e9, 1)}
+epi_print <- epi_out[, c('vacc_type','simulation_index','incr_infections','incr_total_DALYs','incr_deaths')][, lapply(.SD, sum), by = c('vacc_type','simulation_index')]
+epi_print <- dt_to_meas(epi_print, cols = 'vacc_type')
+epi_print_w <- dcast(epi_print, vacc_type ~ measure, value.var = c('incr_infections','incr_total_DALYs','incr_deaths'))
+epi_print_w[, inf_av := paste0(billions(incr_infections_median), ' (95% CI: ', billions(incr_infections_eti95L), ' - ', billions(incr_infections_eti95U), ')')]
+epi_print_w[, death_av := paste0(millions(incr_deaths_median), ' (95% CI: ', millions(incr_deaths_eti95L), ' - ', millions(incr_deaths_eti95U), ')')]
+epi_print_w[, daly_av := paste0(millions(incr_total_DALYs_median), ' (95% CI: ', millions(incr_total_DALYs_eti95L), ' - ', millions(incr_total_DALYs_eti95U), ')')]
+
+cat('Infections averted:\n')
+cat(unlist(epi_print_w$vacc_type), sep = '      ')
+cat('\n')
+cat(unlist(epi_print_w$inf_av), sep ='  ')
+cat('\n')
+cat('Deaths averted:\n')
+cat(unlist(epi_print_w$vacc_type), sep = '      ')
+cat('\n')
+cat(unlist(epi_print_w$death_av), sep ='  ')
+cat('\n')
+cat('DALYs averted:\n')
+cat(unlist(epi_print_w$vacc_type), sep = '      ')
+cat('\n')
+cat(unlist(epi_print_w$daly_av), sep ='  ')
+cat('\n')
+
+
+
+
 
 
 

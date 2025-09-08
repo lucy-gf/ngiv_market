@@ -131,13 +131,13 @@ demand_input %>% group_by(WHO_region, vacc_scenario, year, vacc_used) %>%
   summarise(pop = sum(pop),
          doses = sum(doses)) %>% 
   ggplot() + 
-  geom_bar(aes(x = year, y = 1e5*doses/pop, fill = vacc_used),
+  geom_bar(aes(x = year, y = 1e3*doses/pop, fill = vacc_used),
            stat = 'identity', position = 'stack') +
   theme_bw() + 
   scale_fill_manual(values = vtn_colors, guide = guide_legend(reverse = TRUE)) + 
   facet_grid(WHO_region ~ vacc_scenario, scales = 'free',
              labeller = labeller(WHO_region = who_region_labs_o)) +
-  labs(fill = 'Vaccine in use', x = 'Year', y = 'Vaccine doses per 100,000 population') +
+  labs(fill = 'Vaccine in use', x = 'Year', y = 'Vaccine doses per 1000 population') +
   theme(text = element_text(size = 16))
 
 ggsave(here::here('output','figures','epi','vaccine_doses_by_pop.png'),
@@ -147,13 +147,13 @@ demand_input %>% group_by(model_age_group, vacc_scenario, year, WHO_region) %>%
   summarise(pop = sum(pop),
             doses = sum(doses)) %>% 
   ggplot() + 
-  geom_line(aes(x = year, y = 1e5*doses/pop, col = vacc_scenario), lwd = 0.8) +
+  geom_line(aes(x = year, y = 1e3*doses/pop, col = vacc_scenario), lwd = 0.8) +
   theme_bw() + 
   scale_color_manual(values = vtn_colors, guide = guide_legend(reverse = F)) + 
   facet_grid(WHO_region ~ model_age_group, scales = 'free',
              labeller = labeller(model_age_group = supp.labs.agegrps,
                                  WHO_region = who_region_labs_o)) +
-  labs(col = 'Vaccine scenario', x = 'Year', y = 'Vaccine doses per 100,000 population') +
+  labs(col = 'Vaccine scenario', x = 'Year', y = 'Vaccine doses per 1000 population') +
   theme(text = element_text(size = 16)) +
   scale_x_continuous(breaks = c(2030,2040,2050))
 

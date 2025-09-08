@@ -184,9 +184,9 @@ tile1 <- tab1_global %>%
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
   theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
-  theme(text = element_text(size = 14)) +
+  theme(text = element_text(size = 16)) +
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = format(round(percentage/100, 2), nsmall = 2)),
-            col = 'white') +
+            col = 'white', size=5) +
   labs(x = 'Vaccine type', y = '', fill = 'Proportion of countries\ncost-effective') + 
   ggtitle('Upper price point') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa)+
@@ -208,10 +208,10 @@ tile2 <- tab2_global %>%
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), fill = percentage/100)) + 
   theme_bw() + scale_fill_viridis(limits = c(0,0.8)) + 
-  theme(text = element_text(size = 14),
+  theme(text = element_text(size = 16),
         legend.position = 'none') +
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = format(round(percentage/100, 2), nsmall = 2)),
-            col = 'white') +
+            col = 'white', size=5) +
   labs(x = 'Vaccine type', y = '', fill = 'Proportion of countries\ncost-effective') + 
   ggtitle('Lower price point') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa) +
@@ -228,7 +228,7 @@ ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_na
 upper_inmbs[, INMB_mill_num := as.numeric(word(INMB_millions, 1))]
 lower_inmbs[, INMB_mill_num := as.numeric(word(INMB_millions, 1))]
 
-colorscale <- c('royalblue4', 'lightblue','gray80','salmon','firebrick4')
+colorscale <- rev(c('royalblue4', 'lightblue','gray80','salmon','firebrick4'))
 breaks <- c(-1600, -1, 0, 1, 1600)
 
 upper_all <- upper_inmbs %>% 
@@ -238,10 +238,10 @@ upper_all <- upper_inmbs %>%
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() + 
   scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
-  theme(text = element_text(size = 14)) +
+  theme(text = element_text(size = 16)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
-            col = 'white') +
+            col = 'white', size=5) +
   ggtitle('Upper price point') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); upper_all
 
@@ -251,10 +251,10 @@ lower_all <- lower_inmbs %>%
   ggplot() + 
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() +  scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
-  theme(text = element_text(size = 14)) +
+  theme(text = element_text(size = 16)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
-            col = 'white') +
+            col = 'white', size=5) +
   ggtitle('Lower price point') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); lower_all
 
@@ -265,10 +265,10 @@ upper_only_ce <- upper_inmbs %>%
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() + 
   scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
-  theme(text = element_text(size = 14)) +
+  theme(text = element_text(size = 16)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
-            col = 'white') +
+            col = 'white', size=5) +
   ggtitle('Upper price point\n(only cost-effective countries)') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); upper_only_ce
 
@@ -279,10 +279,10 @@ lower_only_ce <- lower_inmbs %>%
   geom_tile(aes(x = vacc_type, y = factor(SA, levels = rev(unique(upper_inmbs$SA))), fill = INMB_mill_num/1000)) + 
   theme_bw() +  
   scale_fill_gradientn(colors = colorscale, values = scales::rescale(breaks), na.value = "#e5e5e5", limits = c(-1600, 1600)) +
-  theme(text = element_text(size = 14)) +
+  theme(text = element_text(size = 16)) +
   labs(x = 'Vaccine type', y = '', fill = 'Global INMB (billions)') + 
   geom_text(aes(x = vacc_type, y = factor(SA, levels = rev(unique(tab1_global$SA))), label = round(INMB_mill_num/1000, 0)),
-            col = 'white') +
+            col = 'white', size=5) +
   ggtitle('Lower price point\n(only cost-effective countries)') + 
   scale_y_discrete(breaks = names(supp.labs.sa), labels = supp.labs.sa); lower_only_ce
 
@@ -301,7 +301,7 @@ CCCC
 CCCC
 CCCC
 '
-p1 + p2 + plot_layout(nrow = 2, design = layout)
+p1 + p2 + plot_layout(nrow = 2, design = layout) + plot_annotation(tag_levels = "a") 
 
 ggsave(here::here('output','figures','econ',paste0(scenario_name, econ_folder_name),paste0('combined_tiles.png')),
        width=38,height=38,units="cm")
@@ -337,10 +337,13 @@ lower_bars <- econ_inmb_mean_w_lower %>%
            position = 'stack', stat = 'identity') +
   geom_hline(data = econ_inmb_mean_w_lower %>% filter(SA == 'base') %>% 
                group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
-             aes(yintercept = sum), lty = 2) +
+             aes(yintercept = sum), lty = 5) +
+  geom_hline(data = econ_inmb_mean_w_lower %>% filter(SA == 'base', mean >= 0) %>% 
+               group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
+             aes(yintercept = sum), lty = 3) +
   scale_y_continuous(breaks = seq(-600, 600, by = 200)) + 
   facet_grid(. ~ vacc_type, scales = 'free_y', labeller = labeller(SA = supp.labs.sa,
-                                                                  include = supp.labs.ce)) +
+                                                                   include = supp.labs.ce)) +
   scale_fill_manual(values = WHO_colors, labels=who_region_labs2) +
   theme_bw() + ggtitle('Lower price point') + 
   labs(y = 'INMB (billions)', x = 'INMB negative/positive', fill = 'WHO Region'); lower_bars 
@@ -353,7 +356,10 @@ upper_bars <- econ_inmb_mean_w %>%
            position = 'stack', stat = 'identity') +
   geom_hline(data = econ_inmb_mean_w %>% filter(SA == 'base') %>% 
                group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
-             aes(yintercept = sum), lty = 2) +
+             aes(yintercept = sum), lty = 5) +
+  geom_hline(data = econ_inmb_mean_w %>% filter(SA == 'base', mean >= 0) %>% 
+               group_by(vacc_type) %>% summarise(sum = sum(mean/1e9), negative = '< 0'), 
+             aes(yintercept = sum), lty = 3) +
   scale_y_continuous(breaks = seq(-600, 600, by = 200)) + 
   facet_grid(. ~ vacc_type, scales = 'free_y', labeller = labeller(SA = supp.labs.sa,
                                                                    include = supp.labs.ce)) +

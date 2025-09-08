@@ -234,7 +234,7 @@ threshold_prices_tot <- threshold_prices_tot[WHO_regions, on='iso3c']
 
 write_rds(threshold_prices_tot, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('threshold_prices_',comparator,'.rds')))
 
-# median threhold price
+# mean threhold price
 
 threshold_prices_meas <- dt_to_meas(threshold_prices_tot, c('vacc_type','iso3c','country','WHOREGION','gdpcap'), usingMean = T)
 threshold_prices_meas_w <- dcast(threshold_prices_meas,
@@ -313,5 +313,25 @@ WHO_regions <- data.table(read_csv(here::here('data','econ','WHO_regions.csv'), 
 setnames(WHO_regions, 'country_code','iso3c')
 WHO_regions <- WHO_regions[iso3c %in% econ_inmb_meds_w$iso3c]
 epi_out_meas_w  <- epi_out_meas_w [WHO_regions, on='iso3c']
+epi_out  <- epi_out[WHO_regions, on='iso3c']
 
+write_rds(epi_out, here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes',comparator,'_100sim.rds')))
 write_rds(epi_out_meas_w , here::here('output','data','econ',paste0(scenario_name, econ_folder_name), 'outputs',paste0('incr_epi_outcomes',comparator,'.rds')))
+
+## cat INMBs
+
+cati <- econ_inmb %>% group_by(vacc_type, simulation_index) %>% summarise(inmb = sum(inmb)/1e9) %>% ungroup()
+
+cati_m <- dt_to_meas(data.table(cati), cols = c('vacc_type'))
+cati_m_w <- dcast(cati_m, vacc_type ~ measure, value.var = 'inmb')
+cati_m_w[, print := paste0(round(median), ' (95% CI: ', round(eti95L), ' - ', round(eti95U), ')')]
+
+cat('\nGlobal INMB:\n')
+cat(cati_m_w$vacc_type, sep = '             ')
+cat('\n')
+cat(cati_m_w$print, sep = '  ')
+cat('\n')
+
+
+
+
