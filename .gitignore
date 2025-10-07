@@ -4,6 +4,6 @@
 .Ruserdata
 
 data/MMGH/raw/
-data/MMGH/raw/dummy_data/
+data/MMGH/dummy_data/
 output/data/
 output/figures/
